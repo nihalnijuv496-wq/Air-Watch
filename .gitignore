@@ -10,7 +10,7 @@ local.properties
 captures
 .externalNativeBuild
 .cxx
-.env
+*.env
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/
