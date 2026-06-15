@@ -15,6 +15,7 @@ import org.airwatch.project.Theme.RowDivider
 
 @Composable
 fun MenuScreen() {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
