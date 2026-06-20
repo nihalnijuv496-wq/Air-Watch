@@ -6,15 +6,31 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import org.airwatch.project.Theme.RowDivider
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
+import org.airwatch.project.APICommunication.fetchFlights
+import org.airwatch.project.Aircraft.AirCraft
+import org.airwatch.project.UIComponents.RowDivider
+import org.airwatch.project.UIComponents.ScrollableColumn
 
 
 @Composable
 fun MenuScreen() {
+
+    val logMessages = remember { mutableStateListOf<String>() } //TODO{"add time interval for which aircrafts are fetched"}
+    var airCrafts by remember { mutableStateOf<List<AirCraft>>(emptyList()) }
+
 
     Column(
         modifier = Modifier
@@ -39,17 +55,32 @@ fun MenuScreen() {
                 .fillMaxHeight(fraction = 0.65f)
         )
         {
-
+            val scope = rememberCoroutineScope()
+            Button(
+                onClick = {scope.launch {
+                    airCrafts = fetchFlights()
+                    logMessages.add("fetched ${airCrafts.size} aircrafts")
+                    airCrafts.forEach { println(it) }
+                } },
+                content = { Text (text = "getFlights")}
+            )
         }
 
         RowDivider()
 
-        LazyRow(
+        ScrollableColumn(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+            content = {
+                logMessages.forEach {
+                    Text(
+                        text = it,
+                        fontSize = 10.sp,
+                        color = Color.White
+                    )
+                }
+            },
+            count = logMessages.size
         )
-        {
-
-        }
     }
 }
