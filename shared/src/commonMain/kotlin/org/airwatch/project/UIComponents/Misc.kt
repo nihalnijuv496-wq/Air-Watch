@@ -1,5 +1,10 @@
 package org.airwatch.project.UIComponents
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.rememberScrollState
@@ -29,4 +34,21 @@ fun ScrollableColumn(modifier: Modifier, content: @Composable ColumnScope.()-> U
         modifier = modifier.verticalScroll(scrollState),
         content = content
     )
+}
+
+@Composable
+fun SideBar(isVisible: Boolean, modifier: Modifier, content: @Composable AnimatedVisibilityScope.()-> Unit)
+{
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = slideInHorizontally(initialOffsetX = { it }),
+        exit = slideOutHorizontally(targetOffsetX = { it }),
+    )
+    {
+        Box(modifier = modifier)
+        {
+            content()
+
+        }
+    }
 }
