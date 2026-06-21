@@ -2,13 +2,18 @@ package org.airwatch.project.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,12 +25,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import org.airwatch.project.APICommunication.fetchFlights
 import org.airwatch.project.Aircraft.AirCraft
-import org.airwatch.project.UIComponents.RowDivider
+import org.airwatch.project.UIComponents.ColumnDivider
+import org.airwatch.project.UIComponents.FilterSideBarContent
 import org.airwatch.project.UIComponents.ScrollableColumn
 import org.airwatch.project.UIComponents.SideBar
 import org.airwatch.project.UIComponents.backGroundColor
@@ -41,13 +46,21 @@ fun MenuScreen() {
     var isSideBarVisible by remember { mutableStateOf(false) }
     var isGlobeElseMap by remember { mutableStateOf(true)}
 
-    Box(modifier = Modifier.fillMaxSize())
+
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .windowInsetsPadding(WindowInsets.statusBars)
+        .windowInsetsPadding(WindowInsets.navigationBars)
+    )
     {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = backGroundColor)
-                .clickable{isSideBarVisible = false},
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ){isSideBarVisible = false},
 
             )
         {
@@ -91,7 +104,7 @@ fun MenuScreen() {
                 }
             }
 
-            RowDivider()
+            ColumnDivider()
 
             Row(
                 modifier = Modifier
@@ -110,7 +123,7 @@ fun MenuScreen() {
                 )
             }
 
-            RowDivider()
+            ColumnDivider()
 
             ScrollableColumn(
                 modifier = Modifier
@@ -120,7 +133,7 @@ fun MenuScreen() {
                         Text(
                             text = it,
                             fontSize = 10.sp,
-                            color = Color.White
+                            color = textColor
                         )
                     }
                 },
@@ -132,10 +145,9 @@ fun MenuScreen() {
             isVisible = isSideBarVisible,
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(0.65f)
+                .fillMaxWidth(0.85f)
                 .align(Alignment.CenterStart),
-            content = {
-            }
+            contentFun = { FilterSideBarContent() }
         )
     }
 
