@@ -28,9 +28,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import org.airwatch.project.APICommunication.fetchFlights
-import org.airwatch.project.Aircraft.AirCraft
+import org.airwatch.project.Aircraft.airCrafts
+import org.airwatch.project.Aircraft.currShowableAirCrafts
+import org.airwatch.project.Aircraft.updateAircraftList
+import org.airwatch.project.Filter.FilterSideBarContent
 import org.airwatch.project.UIComponents.ColumnDivider
-import org.airwatch.project.UIComponents.FilterSideBarContent
 import org.airwatch.project.UIComponents.ScrollableColumn
 import org.airwatch.project.UIComponents.SideBar
 import org.airwatch.project.UIComponents.backGroundColor
@@ -41,8 +43,6 @@ import org.airwatch.project.UIComponents.textColor
 fun MenuScreen() {
 
     val logMessages = remember { mutableStateListOf<String>() } //TODO{"add time interval in which aircrafts are fetched"}
-    var airCrafts by remember { mutableStateOf<List<AirCraft>>(emptyList()) }
-    val currShowableAirCrafts = airCrafts
     var isSideBarVisible by remember { mutableStateOf(false) }
     var isGlobeElseMap by remember { mutableStateOf(true)}
 
@@ -115,12 +115,22 @@ fun MenuScreen() {
                 val scope = rememberCoroutineScope()
                 Button(
                     onClick = {scope.launch {
-                        airCrafts = fetchFlights()
-                        logMessages.add("fetched ${currShowableAirCrafts.size} aircrafts")
-                        currShowableAirCrafts.forEach { println(it) }
+                        updateAircraftList(fetchFlights())
+                        logMessages.add("fetched ${currShowableAirCrafts().size} aircrafts")
+                        currShowableAirCrafts().forEach { println(it) }
                     } },
                     content = { Text (text = "getFlights")}
                 )
+                Button(
+                    onClick = {currShowableAirCrafts().forEach {
+                        println("* $it")
+                    }},
+                    content = {Text("showVisible")})
+                Button(
+                    onClick = {airCrafts.forEach {
+                        println("* $it")
+                    }},
+                    content = {Text("showFull")})
             }
 
             ColumnDivider()
@@ -147,7 +157,7 @@ fun MenuScreen() {
                 .fillMaxHeight()
                 .fillMaxWidth(0.85f)
                 .align(Alignment.CenterStart),
-            contentFun = { FilterSideBarContent() }
+            contentFun = { FilterSideBarContent(data = airCrafts) }
         )
     }
 

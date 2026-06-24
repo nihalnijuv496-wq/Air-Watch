@@ -1,5 +1,7 @@
 package org.airwatch.project.Aircraft
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.booleanOrNull
@@ -7,6 +9,7 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonPrimitive
+import org.airwatch.project.Filter.filteredAirCrafts
 
 
 @Serializable
@@ -33,6 +36,18 @@ data class AirCraft (
     val squawk: String?,
     val spi: Boolean?,
 )
+var _airCrafts = mutableStateOf<List<AirCraft>>(emptyList())
+val airCrafts: List<AirCraft> get() = _airCrafts.value
+
+fun updateAircraftList(newList:MutableState<List<AirCraft>>)
+{
+    _airCrafts = newList
+}
+
+fun currShowableAirCrafts() = filteredAirCrafts.ifEmpty { airCrafts }
+
+
+
 
 fun JsonArray.toAirCraft(): AirCraft
 {

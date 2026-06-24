@@ -69,6 +69,7 @@ kotlin {
             implementation("io.ktor:ktor-client-core:3.1.3")
             implementation("io.ktor:ktor-client-content-negotiation:3.1.3")
             implementation("io.ktor:ktor-serialization-kotlinx-json:3.1.3")
+            implementation("org.jetbrains.compose.material:material-icons-core:1.7.3")
         }
         androidMain.dependencies {
             implementation("io.ktor:ktor-client-okhttp:3.1.3")
