@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -23,11 +22,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.airwatch.project.Filter.filterAirCraftsByICAO4
 import org.airwatch.project.Filter.icao4Queries
 import org.airwatch.project.UIComponents.CheckBox
+import org.airwatch.project.UIComponents.SearchBarFilter
 
 
 @Composable
@@ -44,14 +43,7 @@ fun ICAO4Bar(data: List<String>)
 
     Box(modifier = Modifier.fillMaxSize())
     {
-        ICAO4SearchBar(data)
-
-        Button(
-            onClick = { icao4Queries.clear()
-                      filterAirCraftsByICAO4()},
-            content = { Text("Clear") },
-            modifier = Modifier.align(Alignment.BottomEnd)
-        )
+        SearchBarFilter(suggestions = data, queryList = icao4Queries, filterFun = { filterAirCraftsByICAO4() })
     }
 
 }
@@ -78,7 +70,7 @@ fun ICAO4SearchBar(suggestions: List<String>) {
             SearchBarDefaults.InputField(
                 query = query,
                 onQueryChange = { query = it },
-                onSearch = { expanded = false }, // Collapses bar on search submit
+                onSearch = { expanded = false },
                 expanded = expanded,
                 onExpandedChange = { expanded = it },
                 placeholder = { Text("Search here...") },

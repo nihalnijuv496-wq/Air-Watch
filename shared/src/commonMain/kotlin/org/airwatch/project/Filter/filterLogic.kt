@@ -20,3 +20,10 @@ fun filterAirCraftsByICAO4()
     }
     println(filteredAirCrafts)
 }
+
+
+fun clearFilter()
+{
+    icao4Queries.clear()
+    filterAirCraftsByICAO4()
+}
