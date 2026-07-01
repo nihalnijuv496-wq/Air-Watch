@@ -9,7 +9,7 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonPrimitive
-import org.airwatch.project.Filter.filteredAirCrafts
+import org.airwatch.project.Filter.Filter
 
 
 @Serializable
@@ -44,7 +44,7 @@ fun updateAircraftList(newList:MutableState<List<AirCraft>>)
     _airCrafts = newList
 }
 
-fun currShowableAirCrafts() = filteredAirCrafts.ifEmpty { airCrafts }
+fun currShowableAirCrafts() = Filter.filteredAirCrafts.ifEmpty { airCrafts }
 
 
 

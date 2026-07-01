@@ -48,8 +48,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.airwatch.project.Filter.filterAll
 
-class CheckBox(val text: String , val onCheckedChange:() -> Unit)
+class CheckBox(val text: String , val onCheckedChange:(nextState: Boolean) -> Unit)
 {
     var isChecked by mutableStateOf(false)
     @Composable
@@ -64,9 +65,9 @@ class CheckBox(val text: String , val onCheckedChange:() -> Unit)
         )) {
             Checkbox(
                 checked = isChecked,
-                onCheckedChange = {
-                    isChecked = it
-                    onCheckedChange()
+                onCheckedChange = { nextState ->
+                    isChecked = nextState
+                    onCheckedChange(nextState)
                 }
             )
             Text(text)
@@ -143,7 +144,7 @@ fun SideBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarFilter(suggestions: List<String>, queryList: MutableList<String>, filterFun: ()->Unit) {
+fun SearchBarFilter(suggestions: List<String>, queryList: MutableList<String>) {
     var query by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     val filteredSuggestions by remember {
@@ -182,9 +183,10 @@ fun SearchBarFilter(suggestions: List<String>, queryList: MutableList<String>, f
             items(filteredSuggestions) { suggestion ->
                 ListItem(
                     headlineContent = {
-                        CheckBox(text = suggestion ,onCheckedChange = {
-                            queryList.add(suggestion)
-                            filterFun()
+                        CheckBox(text = suggestion ,onCheckedChange = {next ->
+                            if(next) queryList.add(suggestion)
+                            else queryList.remove(suggestion)
+                            filterAll()
                         }).Draw()
                     }
                 )
