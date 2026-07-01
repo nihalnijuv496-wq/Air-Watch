@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.airwatch.project.Aircraft.AirCraft
+import org.airwatch.project.Filter.FilterSubUI.CountryBar
 import org.airwatch.project.Filter.FilterSubUI.ICAO4Bar
 import org.airwatch.project.UIComponents.BasicButton
 import org.airwatch.project.UIComponents.ColumnDivider
@@ -81,7 +82,7 @@ fun FilterSideBarContent(data: List<AirCraft>)
                     }
 
                     "originCountry" -> {
-
+                        CountryBar(data.map { it.originCountry })
                     }
 
                     "area" -> {
