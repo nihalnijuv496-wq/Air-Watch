@@ -50,9 +50,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.airwatch.project.Filter.filterAll
 
-class CheckBox(val text: String , val onCheckedChange:(nextState: Boolean) -> Unit)
+class CheckBox(val text: String, initState: Boolean, val onCheckedChange:(nextState: Boolean) -> Unit)
 {
-    var isChecked by mutableStateOf(false)
+    var isChecked by mutableStateOf(initState)
     @Composable
     fun Draw()
     {
@@ -183,7 +183,9 @@ fun SearchBarFilter(suggestions: List<String>, queryList: MutableList<String>) {
             items(filteredSuggestions) { suggestion ->
                 ListItem(
                     headlineContent = {
-                        CheckBox(text = suggestion ,onCheckedChange = {next ->
+                        CheckBox(text = suggestion,
+                            initState = queryList.contains(suggestion) ,
+                            onCheckedChange = {next ->
                             if(next) queryList.add(suggestion)
                             else queryList.remove(suggestion)
                             filterAll()
