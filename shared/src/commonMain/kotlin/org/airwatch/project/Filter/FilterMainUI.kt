@@ -20,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.airwatch.project.Aircraft.AirCraft
+import org.airwatch.project.Filter.Filter.clearFilter
+import org.airwatch.project.Filter.FilterSubUI.AreaBar
 import org.airwatch.project.Filter.FilterSubUI.CountryBar
 import org.airwatch.project.Filter.FilterSubUI.ICAO4Bar
 import org.airwatch.project.UIComponents.BasicButton
@@ -68,7 +70,11 @@ fun FilterSideBarContent(data: List<AirCraft>)
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                BasicButton(content = { Text("Apply") }, onClick = {currentFilterBar = "direction"})
+                BasicButton(
+                    onClick = { clearFilter() },
+                    content = { Text("Clear") }
+                )
+                BasicButton(content = { Text("Apply") }, onClick = {Filter.filterAll()})
             }
 
             RowDivider()
@@ -86,7 +92,7 @@ fun FilterSideBarContent(data: List<AirCraft>)
                     }
 
                     "area" -> {
-
+                        AreaBar()
                     }
 
                     "altitude" -> {

@@ -32,6 +32,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
@@ -48,7 +49,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.airwatch.project.Filter.filterAll
 
 class CheckBox(val text: String, initState: Boolean, val onCheckedChange:(nextState: Boolean) -> Unit)
 {
@@ -188,7 +188,6 @@ fun SearchBarFilter(suggestions: List<String>, queryList: MutableList<String>) {
                             onCheckedChange = {next ->
                             if(next) queryList.add(suggestion)
                             else queryList.remove(suggestion)
-                            filterAll()
                         }).Draw()
                     }
                 )
@@ -196,3 +195,22 @@ fun SearchBarFilter(suggestions: List<String>, queryList: MutableList<String>) {
         }
     }
 }
+
+@Composable
+fun TextBoxForDouble(onValueChange: (value:Double)-> Unit, label: @Composable () -> Unit)
+{
+    var text by remember { mutableStateOf("") }
+    OutlinedTextField(
+        value = text,
+        onValueChange =
+            {input ->
+                val hasSingleDot = input.count{it == '.'} <= 1
+                val hasOnlyDigitsAndDots = input.all{it.isDigit() || it == '.'}
+                if(hasSingleDot && hasOnlyDigitsAndDots) text = input
+
+                onValueChange(text.toDouble())
+            },
+        label = label
+    )
+}
+

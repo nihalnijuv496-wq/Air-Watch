@@ -31,7 +31,6 @@ import org.airwatch.project.APICommunication.fetchFlights
 import org.airwatch.project.Aircraft.airCrafts
 import org.airwatch.project.Aircraft.currShowableAirCrafts
 import org.airwatch.project.Aircraft.updateAircraftList
-import org.airwatch.project.Filter.Filter.clearFilter
 import org.airwatch.project.Filter.FilterSideBarContent
 import org.airwatch.project.UIComponents.ColumnDivider
 import org.airwatch.project.UIComponents.ScrollableColumn
@@ -97,10 +96,7 @@ fun MenuScreen() {
                         onClick = {isSideBarVisible = true},
                         content = { Text (text = "filter")}
                     )
-                    Button(
-                        onClick = { clearFilter() },
-                        content = { Text("Clear") }
-                    )
+
 
                     Button(
                         onClick = {isGlobeElseMap = !isGlobeElseMap},

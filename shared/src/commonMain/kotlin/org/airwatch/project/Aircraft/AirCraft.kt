@@ -24,8 +24,7 @@ data class AirCraft (
     val originCountry: String,
     val timePosition: Int?,
     val lastContact: Int?,
-    val longitude: Double?,
-    val latitude: Double?,
+    val position: Coordinate,
     val baroAltitude: Double?,
     val onGround: Boolean?,
     val velocity: Double?,
@@ -44,8 +43,8 @@ fun updateAircraftList(newList:MutableState<List<AirCraft>>)
     _airCrafts = newList
 }
 
-fun currShowableAirCrafts() = Filter.filteredAirCrafts.ifEmpty { airCrafts }
-
+fun currShowableAirCrafts() =if(Filter.isFiltering) Filter.filteredAirCrafts else airCrafts
+    //Filter.filteredAirCrafts.ifEmpty { airCrafts }
 
 
 
@@ -57,8 +56,9 @@ fun JsonArray.toAirCraft(): AirCraft
         originCountry = this[2].jsonPrimitive.content,
         timePosition = this[3].jsonPrimitive.intOrNull,
         lastContact = this[4].jsonPrimitive.intOrNull,
-        longitude = this[5].jsonPrimitive.doubleOrNull,
-        latitude = this[6].jsonPrimitive.doubleOrNull,
+        position = Coordinate(
+            longitude = this[5].jsonPrimitive.doubleOrNull,
+            latitude = this[6].jsonPrimitive.doubleOrNull),
         baroAltitude = this[7].jsonPrimitive.doubleOrNull,
         onGround = this[8].jsonPrimitive.booleanOrNull,
         velocity = this[9].jsonPrimitive.doubleOrNull,
