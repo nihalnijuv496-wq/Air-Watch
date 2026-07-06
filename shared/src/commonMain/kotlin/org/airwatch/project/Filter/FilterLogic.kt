@@ -1,6 +1,7 @@
 package org.airwatch.project.Filter
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import org.airwatch.project.Aircraft.AirCraft
 import org.airwatch.project.Aircraft.AreaRangeByCoordinate
 import org.airwatch.project.Aircraft.Coordinate
@@ -24,13 +25,17 @@ object Filter
 
     object Queries
     {
-        val icao4Queries = mutableListOf<String>()
-        val countryQueries = mutableListOf<String>()
-        val areaQuery = AreaRangeByCoordinate(
-            startPosition = Coordinate(null, null),
-            endPosition = Coordinate(null, null)
-        )
-        val altitudeQuery = PositionRangeByAltitude(minAltitude = null, maxAltitude = null)
+        val icao4Queries = mutableStateListOf<String>()
+        val countryQueries = mutableStateListOf<String>()
+        val areaQuery = mutableStateOf(
+            AreaRangeByCoordinate(
+                startPosition = Coordinate(null, null),
+                endPosition = Coordinate(null, null)
+            )
+        ).value
+        val altitudeQuery = mutableStateOf(
+            PositionRangeByAltitude(minAltitude = null, maxAltitude = null)
+        ).value
 
         fun clearQueries()
         {

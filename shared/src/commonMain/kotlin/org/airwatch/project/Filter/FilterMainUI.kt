@@ -85,11 +85,11 @@ fun FilterSideBarContent(data: List<AirCraft>)
                 when(currentFilterBar)
                 {
                     "icao4" -> {
-                        ICAO4Bar(data.map { it.icao24 })
+                        ICAO4Bar(data.mapTo(HashSet()){it.icao24})
                     }
 
                     "originCountry" -> {
-                        CountryBar(data.map { it.originCountry })
+                        CountryBar(data.mapTo(HashSet()) { it.originCountry })
                     }
 
                     "area" -> {

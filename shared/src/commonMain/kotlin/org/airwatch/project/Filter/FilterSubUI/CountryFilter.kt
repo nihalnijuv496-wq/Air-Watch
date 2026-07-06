@@ -8,7 +8,7 @@ import org.airwatch.project.Filter.Filter
 import org.airwatch.project.UIComponents.SearchBarFilter
 
 @Composable
-fun CountryBar(data: List<String>)
+fun CountryBar(data: HashSet<String>)
 {
     Box(modifier = Modifier.fillMaxSize())
     {

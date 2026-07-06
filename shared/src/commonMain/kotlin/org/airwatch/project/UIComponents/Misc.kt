@@ -50,29 +50,19 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-class CheckBox(val text: String, initState: Boolean, val onCheckedChange:(nextState: Boolean) -> Unit)
-{
-    var isChecked by mutableStateOf(initState)
-    @Composable
-    fun Draw()
-    {
-        Row(modifier = Modifier
+@Composable
+fun CheckBoxRow(
+    text: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
             .fillMaxWidth()
-            .toggleable(
-            value = isChecked,
-            onValueChange = {isChecked = it},
-            role = Role.Checkbox
-        )) {
-            Checkbox(
-                checked = isChecked,
-                onCheckedChange = { nextState ->
-                    isChecked = nextState
-                    onCheckedChange(nextState)
-                }
-            )
-            Text(text)
-        }
-
+            .toggleable(value = checked, onValueChange = onCheckedChange, role = Role.Checkbox)
+    ) {
+        Checkbox(checked = checked, onCheckedChange = null)
+        Text(text)
     }
 }
 
@@ -144,7 +134,7 @@ fun SideBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarFilter(suggestions: List<String>, queryList: MutableList<String>) {
+fun SearchBarFilter(suggestions: HashSet<String>, queryList: MutableList<String>) {
     var query by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     val filteredSuggestions by remember {
@@ -180,15 +170,16 @@ fun SearchBarFilter(suggestions: List<String>, queryList: MutableList<String>) {
     ) {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
 
-            items(filteredSuggestions) { suggestion ->
+            items(filteredSuggestions, key = {it}) { suggestion ->
                 ListItem(
                     headlineContent = {
-                        CheckBox(text = suggestion,
-                            initState = queryList.contains(suggestion) ,
-                            onCheckedChange = {next ->
-                            if(next) queryList.add(suggestion)
-                            else queryList.remove(suggestion)
-                        }).Draw()
+                        CheckBoxRow(
+                            text = suggestion,
+                            checked = suggestion in queryList,
+                            onCheckedChange = { next ->
+                                if (next) queryList.add(suggestion) else queryList.remove(suggestion)
+                            }
+                        )
                     }
                 )
             }

@@ -9,7 +9,7 @@ import org.airwatch.project.UIComponents.SearchBarFilter
 
 
 @Composable
-fun ICAO4Bar(data: List<String>)
+fun ICAO4Bar(data: HashSet<String>)
 {
     Box(modifier = Modifier.fillMaxSize())
     {
