@@ -2,14 +2,16 @@ package org.airwatch.project.Filter
 
 import androidx.compose.runtime.mutableStateListOf
 import org.airwatch.project.Aircraft.AirCraft
-import org.airwatch.project.Aircraft.AreaByCoordinate
+import org.airwatch.project.Aircraft.AreaRangeByCoordinate
 import org.airwatch.project.Aircraft.Coordinate
+import org.airwatch.project.Aircraft.PositionRangeByAltitude
 import org.airwatch.project.Aircraft.airCrafts
 import org.airwatch.project.Aircraft.currShowableAirCrafts
-import org.airwatch.project.Filter.Filter.queries.areaQuery
-import org.airwatch.project.Filter.Filter.queries.clearQueries
-import org.airwatch.project.Filter.Filter.queries.countryQueries
-import org.airwatch.project.Filter.Filter.queries.icao4Queries
+import org.airwatch.project.Filter.Filter.Queries.altitudeQuery
+import org.airwatch.project.Filter.Filter.Queries.areaQuery
+import org.airwatch.project.Filter.Filter.Queries.clearQueries
+import org.airwatch.project.Filter.Filter.Queries.countryQueries
+import org.airwatch.project.Filter.Filter.Queries.icao4Queries
 
 
 object Filter
@@ -19,14 +21,16 @@ object Filter
     var isFiltering = false
 
 
-    object queries
+
+    object Queries
     {
         val icao4Queries = mutableListOf<String>()
         val countryQueries = mutableListOf<String>()
-        val areaQuery = AreaByCoordinate(
+        val areaQuery = AreaRangeByCoordinate(
             startPosition = Coordinate(null, null),
             endPosition = Coordinate(null, null)
         )
+        val altitudeQuery = PositionRangeByAltitude(minAltitude = null, maxAltitude = null)
 
         fun clearQueries()
         {
@@ -54,12 +58,14 @@ object Filter
             airCrafts.filter{
                 (icao4Queries.isEmpty() || it.icao24 in icao4Queries) &&
                         (countryQueries.isEmpty() || it.originCountry in countryQueries) &&
-                        (areaQuery.isEmpty() || areaQuery.isInBound(it.position))
+                        (areaQuery.isEmpty() || areaQuery.isInBound(it.position)) &&
+                        (altitudeQuery.isEmpty() || altitudeQuery.isInBound(it.baroAltitude))
             }
         )
         isFiltering = true
         println("---")
         currShowableAirCrafts().forEach { println("*${it}") }
+        println(countryQueries)
     }
 
 }

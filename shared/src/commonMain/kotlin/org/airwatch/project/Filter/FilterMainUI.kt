@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.airwatch.project.Aircraft.AirCraft
 import org.airwatch.project.Filter.Filter.clearFilter
+import org.airwatch.project.Filter.FilterSubUI.AltitudeBar
 import org.airwatch.project.Filter.FilterSubUI.AreaBar
 import org.airwatch.project.Filter.FilterSubUI.CountryBar
 import org.airwatch.project.Filter.FilterSubUI.ICAO4Bar
@@ -96,7 +97,7 @@ fun FilterSideBarContent(data: List<AirCraft>)
                     }
 
                     "altitude" -> {
-
+                        AltitudeBar()
                     }
 
                     "velocity" -> {

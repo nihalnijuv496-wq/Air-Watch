@@ -1,4 +1,5 @@
 package org.airwatch.project.Filter.FilterSubUI
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,12 +10,8 @@ import androidx.compose.ui.Modifier
 import org.airwatch.project.Filter.Filter
 import org.airwatch.project.UIComponents.TextBoxForDouble
 
-
 @Composable
-fun AreaBar()
-{
-
-
+fun AltitudeBar() {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -23,31 +20,17 @@ fun AreaBar()
     {
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.areaQuery.startPosition.latitude = value
+                Filter.Queries.altitudeQuery.minAltitude = value
             },
-            label = {Text("starting latitude: ")}
+            label = { Text("minimum altitude: ") }
         )
 
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.areaQuery.endPosition.latitude = value
+                Filter.Queries.altitudeQuery.maxAltitude = value
             },
-            label = {Text("ending latitude: ")}
+            label = { Text("maximum altitude: ") }
         )
 
-        TextBoxForDouble(
-            onValueChange = { value ->
-                Filter.Queries.areaQuery.startPosition.longitude = value
-            },
-            label = {Text("starting longitude: ")}
-        )
-        
-        TextBoxForDouble(
-            onValueChange = { value ->
-                Filter.Queries.areaQuery.endPosition.longitude = value
-            },
-            label = {Text("ending longitude: ")}
-        )
     }
-
 }

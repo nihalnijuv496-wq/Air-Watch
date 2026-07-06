@@ -3,10 +3,9 @@ package org.airwatch.project.Aircraft
 data class Coordinate(
     var latitude: Double?,
     var longitude: Double?
-
 )
 
-data class AreaByCoordinate(
+data class AreaRangeByCoordinate(
     val startPosition: Coordinate,
     val endPosition: Coordinate,
 )
@@ -52,4 +51,24 @@ data class AreaByCoordinate(
         endPosition.longitude = null
 
     }
+}
+
+data class PositionRangeByAltitude(
+    var minAltitude: Double?,
+    var maxAltitude: Double?
+)
+{
+    fun isEmpty(): Boolean =
+        minAltitude == null ||
+        maxAltitude == null
+
+    fun isInBound(altitude: Double?): Boolean
+    {
+        val targetAltitude = altitude ?: -1.0
+        val safeMinAltitude = minAltitude ?: 0.0
+        val safeMaxAltitude = maxAltitude ?: Double.MAX_VALUE
+
+        return targetAltitude in safeMinAltitude..safeMaxAltitude
+    }
+
 }

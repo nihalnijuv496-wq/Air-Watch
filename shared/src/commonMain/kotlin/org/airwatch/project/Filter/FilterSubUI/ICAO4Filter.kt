@@ -13,7 +13,7 @@ fun ICAO4Bar(data: List<String>)
 {
     Box(modifier = Modifier.fillMaxSize())
     {
-        SearchBarFilter(suggestions = data, queryList = Filter.queries.icao4Queries)
+        SearchBarFilter(suggestions = data, queryList = Filter.Queries.icao4Queries)
     }
 
 }

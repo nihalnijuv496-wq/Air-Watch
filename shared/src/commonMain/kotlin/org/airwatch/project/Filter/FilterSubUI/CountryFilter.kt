@@ -12,7 +12,7 @@ fun CountryBar(data: List<String>)
 {
     Box(modifier = Modifier.fillMaxSize())
     {
-        SearchBarFilter(suggestions = data, queryList = Filter.queries.countryQueries)
+        SearchBarFilter(suggestions = data, queryList = Filter.Queries.countryQueries)
     }
 
 }
