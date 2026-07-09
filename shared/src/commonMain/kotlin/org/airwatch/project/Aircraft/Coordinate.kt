@@ -103,3 +103,17 @@ data class VelocityRange(
         set(value) { endValue = value }
 }
 
+data class AngleRange(
+    override var startValue: Double?,
+    override var endValue: Double?
+): RangeByDouble()
+{
+    var minAngle: Double?
+        get() = startValue
+        set(value) { startValue = value }
+
+    var maxAngle: Double?
+        get() = endValue
+        set(value) { endValue = value }
+
+}

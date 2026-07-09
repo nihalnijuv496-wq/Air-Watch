@@ -24,6 +24,7 @@ import org.airwatch.project.Filter.Filter.clearFilter
 import org.airwatch.project.Filter.FilterSubUI.AltitudeBar
 import org.airwatch.project.Filter.FilterSubUI.AreaBar
 import org.airwatch.project.Filter.FilterSubUI.CountryBar
+import org.airwatch.project.Filter.FilterSubUI.DirectionBar
 import org.airwatch.project.Filter.FilterSubUI.ICAO4Bar
 import org.airwatch.project.Filter.FilterSubUI.VelocityBar
 import org.airwatch.project.UIComponents.BasicButton
@@ -106,7 +107,7 @@ fun FilterSideBarContent(data: List<AirCraft>)
                     }
 
                     "direction" -> {
-
+                        DirectionBar()
                     }
 
                     else -> {

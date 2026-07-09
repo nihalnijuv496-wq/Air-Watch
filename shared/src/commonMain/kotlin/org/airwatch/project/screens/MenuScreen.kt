@@ -42,7 +42,7 @@ import org.airwatch.project.UIComponents.textColor
 @Composable
 fun MenuScreen() {
 
-    val logMessages = remember { mutableStateListOf<String>() } //TODO{"add time interval in which aircrafts are fetched"}
+    val logMessages = remember { mutableStateListOf<String>() } //TODO{"add time interval in which aircrafts are fetched", "abstract the log screen to new file"}
     var isSideBarVisible by remember { mutableStateOf(false) }
     var isGlobeElseMap by remember { mutableStateOf(true)}
 

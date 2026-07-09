@@ -4,12 +4,14 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import org.airwatch.project.Aircraft.AirCraft
 import org.airwatch.project.Aircraft.AltitudeRange
+import org.airwatch.project.Aircraft.AngleRange
 import org.airwatch.project.Aircraft.AreaRangeByCoordinate
 import org.airwatch.project.Aircraft.Coordinate
 import org.airwatch.project.Aircraft.VelocityRange
 import org.airwatch.project.Aircraft.airCrafts
 import org.airwatch.project.Aircraft.currShowableAirCrafts
 import org.airwatch.project.Filter.Filter.Queries.altitudeQuery
+import org.airwatch.project.Filter.Filter.Queries.angleQuery
 import org.airwatch.project.Filter.Filter.Queries.areaQuery
 import org.airwatch.project.Filter.Filter.Queries.clearQueries
 import org.airwatch.project.Filter.Filter.Queries.countryQueries
@@ -43,6 +45,10 @@ object Filter
             VelocityRange(startValue = null, endValue = null) // use minVelocity and maxVelocity to access
         ).value
 
+        val angleQuery = mutableStateOf(
+            AngleRange(startValue = null, endValue = null) // use minAngle and maxAngle to access
+        ).value
+
         fun clearQueries()
         {
             icao4Queries.clear()
@@ -50,6 +56,7 @@ object Filter
             areaQuery.clear()
             altitudeQuery.clear()
             velocityQuery.clear()
+            angleQuery.clear()
         }
     }
 
@@ -73,7 +80,8 @@ object Filter
                         (countryQueries.isEmpty() || it.originCountry in countryQueries) &&
                         (areaQuery.isEmpty() || areaQuery.isInBound(it.position)) &&
                         (altitudeQuery.isEmpty() || altitudeQuery.isInBound(it.baroAltitude)) &&
-                        (velocityQuery.isEmpty() || velocityQuery.isInBound(it.velocity))
+                        (velocityQuery.isEmpty() || velocityQuery.isInBound(it.velocity)) &&
+                        (angleQuery.isEmpty() || angleQuery.isInBound(it.trueTrack))
             }
         )
         isFiltering = true

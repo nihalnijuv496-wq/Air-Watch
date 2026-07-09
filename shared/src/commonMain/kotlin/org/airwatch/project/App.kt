@@ -12,12 +12,6 @@ import org.airwatch.project.screens.MenuScreen
 @Composable
 @Preview
 fun App() {
-    /*LaunchedEffect(Unit)
-    {
-        val liveAirCrafts = fetchFlights()
-
-    liveAirCrafts.forEach { println(it) }
-    }*/
     MaterialTheme {
         var screen by remember { mutableStateOf("menu")}
 
