@@ -53,28 +53,31 @@ data class AreaRangeByCoordinate(
     }
 }
 
-data class RangeByDouble(
-    var minValue: Double?,
-    var maxValue: Double?
+abstract class RangeByDouble(
+    var startValue: Double?,
+    var endValue: Double?
 )
 {
     fun isEmpty(): Boolean =
-        minValue == null ||
-        maxValue == null
+        startValue == null ||
+                endValue == null
 
     fun isInBound(value: Double?): Boolean
     {
         val targetValue = value ?: -1.0
-        val safeMinValue = minValue ?: 0.0
-        val safeMaxValue = maxValue ?: Double.MAX_VALUE
+        val safeMinValue = startValue ?: 0.0
+        val safeMaxValue = endValue ?: Double.MAX_VALUE
 
         return targetValue in safeMinValue..safeMaxValue
     }
 
     fun clear()
     {
-        minValue = null
-        maxValue = null
+        startValue = null
+        endValue = null
     }
-
 }
+data class AltitudeRange(var minAltitude: Double?, var maxAltitude: Double?): RangeByDouble(minAltitude, maxAltitude)
+
+data class VelocityRange(var minVelocity: Double?, var maxVelocity: Double?): RangeByDouble(minVelocity, maxVelocity)
+

@@ -3,9 +3,10 @@ package org.airwatch.project.Filter
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import org.airwatch.project.Aircraft.AirCraft
+import org.airwatch.project.Aircraft.AltitudeRange
 import org.airwatch.project.Aircraft.AreaRangeByCoordinate
 import org.airwatch.project.Aircraft.Coordinate
-import org.airwatch.project.Aircraft.RangeByDouble
+import org.airwatch.project.Aircraft.VelocityRange
 import org.airwatch.project.Aircraft.airCrafts
 import org.airwatch.project.Aircraft.currShowableAirCrafts
 import org.airwatch.project.Filter.Filter.Queries.altitudeQuery
@@ -35,11 +36,11 @@ object Filter
             )
         ).value
         val altitudeQuery = mutableStateOf(
-            RangeByDouble(minValue = null, maxValue = null)
+            AltitudeRange(minAltitude = null, maxAltitude = null)
         ).value
 
         val velocityQuery = mutableStateOf(
-            RangeByDouble(minValue = null, maxValue = null)
+            VelocityRange(minVelocity = null, maxVelocity = null)
         ).value
 
         fun clearQueries()
@@ -78,7 +79,6 @@ object Filter
         isFiltering = true
         println("---")
         currShowableAirCrafts().forEach { println("*${it}") }
-        println(countryQueries)
     }
 
 }

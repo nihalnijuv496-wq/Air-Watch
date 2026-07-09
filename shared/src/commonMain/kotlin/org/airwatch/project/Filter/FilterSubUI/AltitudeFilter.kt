@@ -20,14 +20,14 @@ fun AltitudeBar() {
     {
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.altitudeQuery.minValue = value
+                Filter.Queries.altitudeQuery.startValue = value
             },
             label = { Text("minimum altitude: ") }
         )
 
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.altitudeQuery.maxValue = value
+                Filter.Queries.altitudeQuery.endValue = value
             },
             label = { Text("maximum altitude: ") }
         )
