@@ -53,22 +53,28 @@ data class AreaRangeByCoordinate(
     }
 }
 
-data class PositionRangeByAltitude(
-    var minAltitude: Double?,
-    var maxAltitude: Double?
+data class RangeByDouble(
+    var minValue: Double?,
+    var maxValue: Double?
 )
 {
     fun isEmpty(): Boolean =
-        minAltitude == null ||
-        maxAltitude == null
+        minValue == null ||
+        maxValue == null
 
-    fun isInBound(altitude: Double?): Boolean
+    fun isInBound(value: Double?): Boolean
     {
-        val targetAltitude = altitude ?: -1.0
-        val safeMinAltitude = minAltitude ?: 0.0
-        val safeMaxAltitude = maxAltitude ?: Double.MAX_VALUE
+        val targetValue = value ?: -1.0
+        val safeMinValue = minValue ?: 0.0
+        val safeMaxValue = maxValue ?: Double.MAX_VALUE
 
-        return targetAltitude in safeMinAltitude..safeMaxAltitude
+        return targetValue in safeMinValue..safeMaxValue
+    }
+
+    fun clear()
+    {
+        minValue = null
+        maxValue = null
     }
 
 }

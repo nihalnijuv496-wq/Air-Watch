@@ -203,5 +203,5 @@ fun TextBoxForDouble(onValueChange: (value:Double)-> Unit, label: @Composable ()
             },
         label = label
     )
-}
+}// TODO{"there is some bug that force stops the app, probably illegal character of fats typing"}
 

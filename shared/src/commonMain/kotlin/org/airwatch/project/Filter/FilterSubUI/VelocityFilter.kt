@@ -11,7 +11,7 @@ import org.airwatch.project.Filter.Filter
 import org.airwatch.project.UIComponents.TextBoxForDouble
 
 @Composable
-fun AltitudeBar() {
+fun VelocityBar() {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -20,16 +20,16 @@ fun AltitudeBar() {
     {
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.altitudeQuery.minValue = value
+                Filter.Queries.velocityQuery.minValue = value
             },
-            label = { Text("minimum altitude: ") }
+            label = { Text("minimum velocity: ") }
         )
 
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.altitudeQuery.maxValue = value
+                Filter.Queries.velocityQuery.maxValue = value
             },
-            label = { Text("maximum altitude: ") }
+            label = { Text("maximum velocity: ") }
         )
 
     }

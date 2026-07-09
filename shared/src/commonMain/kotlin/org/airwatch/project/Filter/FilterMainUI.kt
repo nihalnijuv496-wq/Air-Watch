@@ -25,6 +25,7 @@ import org.airwatch.project.Filter.FilterSubUI.AltitudeBar
 import org.airwatch.project.Filter.FilterSubUI.AreaBar
 import org.airwatch.project.Filter.FilterSubUI.CountryBar
 import org.airwatch.project.Filter.FilterSubUI.ICAO4Bar
+import org.airwatch.project.Filter.FilterSubUI.VelocityBar
 import org.airwatch.project.UIComponents.BasicButton
 import org.airwatch.project.UIComponents.ColumnDivider
 import org.airwatch.project.UIComponents.RowDivider
@@ -101,7 +102,7 @@ fun FilterSideBarContent(data: List<AirCraft>)
                     }
 
                     "velocity" -> {
-
+                        VelocityBar()
                     }
 
                     "direction" -> {
