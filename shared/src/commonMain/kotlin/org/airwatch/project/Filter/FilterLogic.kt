@@ -36,11 +36,11 @@ object Filter
             )
         ).value
         val altitudeQuery = mutableStateOf(
-            AltitudeRange(minAltitude = null, maxAltitude = null)
+            AltitudeRange(startValue = null, endValue = null) // use minAltitude and maxAltitude to access
         ).value
 
         val velocityQuery = mutableStateOf(
-            VelocityRange(minVelocity = null, maxVelocity = null)
+            VelocityRange(startValue = null, endValue = null) // use minVelocity and maxVelocity to access
         ).value
 
         fun clearQueries()

@@ -25,28 +25,32 @@ fun AreaBar()
             onValueChange = { value ->
                 Filter.Queries.areaQuery.startPosition.latitude = value
             },
-            label = {Text("starting latitude: ")}
+            label = {Text("starting latitude: ")},
+            initialVal = Filter.Queries.areaQuery.startPosition.latitude?.toString()
         )
 
         TextBoxForDouble(
             onValueChange = { value ->
                 Filter.Queries.areaQuery.endPosition.latitude = value
             },
-            label = {Text("ending latitude: ")}
+            label = {Text("ending latitude: ")},
+            initialVal = Filter.Queries.areaQuery.endPosition.latitude?.toString()
         )
 
         TextBoxForDouble(
             onValueChange = { value ->
                 Filter.Queries.areaQuery.startPosition.longitude = value
             },
-            label = {Text("starting longitude: ")}
+            label = {Text("starting longitude: ")},
+            initialVal = Filter.Queries.areaQuery.startPosition.longitude?.toString()
         )
         
         TextBoxForDouble(
             onValueChange = { value ->
                 Filter.Queries.areaQuery.endPosition.longitude = value
             },
-            label = {Text("ending longitude: ")}
+            label = {Text("ending longitude: ")},
+            initialVal = Filter.Queries.areaQuery.endPosition.longitude?.toString()
         )
     }
 

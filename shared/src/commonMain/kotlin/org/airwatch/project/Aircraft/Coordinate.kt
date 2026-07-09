@@ -53,14 +53,12 @@ data class AreaRangeByCoordinate(
     }
 }
 
-abstract class RangeByDouble(
-    var startValue: Double?,
-    var endValue: Double?
-)
+abstract class RangeByDouble()
 {
+    abstract var startValue: Double?
+    abstract var endValue: Double?
     fun isEmpty(): Boolean =
-        startValue == null ||
-                endValue == null
+        startValue == null || endValue == null
 
     fun isInBound(value: Double?): Boolean
     {
@@ -77,7 +75,31 @@ abstract class RangeByDouble(
         endValue = null
     }
 }
-data class AltitudeRange(var minAltitude: Double?, var maxAltitude: Double?): RangeByDouble(minAltitude, maxAltitude)
+data class AltitudeRange(
+    override var startValue: Double?,
+    override var endValue: Double?
+): RangeByDouble()
+{
+    var minAltitude: Double?
+        get() = startValue
+        set(value) { startValue = value }
 
-data class VelocityRange(var minVelocity: Double?, var maxVelocity: Double?): RangeByDouble(minVelocity, maxVelocity)
+    var maxAltitude: Double?
+        get() = endValue
+        set(value) { endValue = value }
+}
+
+data class VelocityRange(
+    override var startValue: Double?,
+    override var endValue: Double?
+): RangeByDouble()
+{
+    var minVelocity: Double?
+        get() = startValue
+        set(value) { startValue = value }
+
+    var maxVelocity: Double?
+        get() = endValue
+        set(value) { endValue = value }
+}
 

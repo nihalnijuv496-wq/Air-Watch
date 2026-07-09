@@ -188,9 +188,9 @@ fun SearchBarFilter(suggestions: HashSet<String>, queryList: MutableList<String>
 }
 
 @Composable
-fun TextBoxForDouble(onValueChange: (value:Double)-> Unit, label: @Composable () -> Unit)
+fun TextBoxForDouble(onValueChange: (value:Double)-> Unit, label: @Composable () -> Unit, initialVal: String?)
 {
-    var text by remember { mutableStateOf("") }
+    var text by remember { mutableStateOf(initialVal ?: "") }
     OutlinedTextField(
         value = text,
         onValueChange =

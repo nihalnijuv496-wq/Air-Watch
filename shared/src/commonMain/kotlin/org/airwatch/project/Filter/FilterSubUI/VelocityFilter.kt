@@ -20,16 +20,18 @@ fun VelocityBar() {
     {
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.velocityQuery.startValue = value
+                Filter.Queries.velocityQuery.minVelocity = value
             },
-            label = { Text("minimum velocity: ") }
+            label = { Text("minimum velocity: ") },
+            initialVal = Filter.Queries.velocityQuery.minVelocity?.toString()
         )
 
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.velocityQuery.endValue = value
+                Filter.Queries.velocityQuery.maxVelocity = value
             },
-            label = { Text("maximum velocity: ") }
+            label = { Text("maximum velocity: ") },
+            initialVal = Filter.Queries.velocityQuery.maxVelocity?.toString()
         )
 
     }
