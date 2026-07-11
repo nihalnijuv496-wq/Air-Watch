@@ -66,16 +66,16 @@ kotlin {
         }
 
         commonMain.dependencies {
-            implementation("io.ktor:ktor-client-core:3.1.3")
-            implementation("io.ktor:ktor-client-content-negotiation:3.1.3")
-            implementation("io.ktor:ktor-serialization-kotlinx-json:3.1.3")
-            implementation("org.jetbrains.compose.material:material-icons-core:1.7.3")
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.material.icons.core)
         }
         androidMain.dependencies {
-            implementation("io.ktor:ktor-client-okhttp:3.1.3")
+            implementation(libs.ktor.client.okhttp)
         }
         iosMain.dependencies {
-            implementation("io.ktor:ktor-client-darwin:3.1.3")
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
