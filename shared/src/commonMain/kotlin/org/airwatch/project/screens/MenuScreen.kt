@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -37,10 +38,15 @@ import org.airwatch.project.UIComponents.ScrollableColumn
 import org.airwatch.project.UIComponents.SideBar
 import org.airwatch.project.UIComponents.backGroundColor
 import org.airwatch.project.UIComponents.textColor
+import org.airwatch.project.WorldMap.loadMapToTree
 
 
 @Composable
 fun MenuScreen() {
+    LaunchedEffect(Unit)
+    {
+        val tree = loadMapToTree()
+    }
 
     val logMessages = remember { mutableStateListOf<String>() } //TODO{"add time interval in which aircrafts are fetched", "abstract the log screen to new file"}
     var isSideBarVisible by remember { mutableStateOf(false) }
