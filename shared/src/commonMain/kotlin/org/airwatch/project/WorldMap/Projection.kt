@@ -162,7 +162,5 @@ class OrthographicProjection(
 
         return samplePoints.mapNotNull { project(it) }
     }
-
-
 }
 

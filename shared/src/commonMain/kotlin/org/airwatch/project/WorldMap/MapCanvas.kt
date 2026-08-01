@@ -4,6 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,51 +22,49 @@ import org.airwatch.project.Aircraft.Coordinate
 fun DrawMapCanvas(type: String, screenWidth: Int, screenHeight: Int)
 {
     var coordinateTree by remember { mutableStateOf<Chunk?>(null) }
-    var projection by remember { mutableStateOf<Projection?>(null) }
 
     LaunchedEffect(Unit) {
-        val loadedTree = withContext(Dispatchers.IO) {
+        coordinateTree = withContext(Dispatchers.IO) {
             loadMapToTree()
         }
-        coordinateTree = loadedTree
     }
 
-    if(coordinateTree == null)
+    val tree = coordinateTree ?: return
+
+
+    val projection = remember(type, screenWidth, screenHeight)
     {
-        println("tree not loaded")
-        return
+        if(type == "Plane") {
+            EquirectangularProjection(
+                viewportWidth = screenWidth.toDouble(),
+                viewportHeight = screenHeight.toDouble(),
+            )
+        }
+        else
+        {
+            OrthographicProjection(
+                viewportWidth = screenWidth.toDouble(),
+                viewportHeight = screenHeight.toDouble(),
+            )
+        }
     }
 
-
-    projection = if(type == "Plane"){
-        EquirectangularProjection(
-            viewportWidth = screenWidth.toDouble(),
-            viewportHeight = screenHeight.toDouble(),
-        )
-    }
-    else{
-        OrthographicProjection(
-            viewportWidth = screenWidth.toDouble(),
-            viewportHeight = screenHeight.toDouble(),
-        )
-
+    val visiblePoints by remember(tree, projection, screenWidth, screenHeight)
+    {
+        derivedStateOf {
+            buildList {
+                traverse(tree, projection, screenWidth, screenHeight) { node ->
+                    node.coordinates.forEach { coordinate ->
+                        projection.project(coordinate)?.let { add(it) }
+                    }
+                }
+            }
+        }
     }
 
     Canvas(modifier = Modifier.fillMaxSize())
     {
-        traverse(
-            node = coordinateTree!!,
-            projection = projection!!,
-            screenWidth = screenWidth,
-            screenHeight = screenHeight
-        ) { node ->
-            node.coordinates.forEach { coordinate ->
-                val screenPos = projection!!.project(coordinate) ?: return@forEach
-                drawPoint(screenPos)
-
-            }
-            println("nodeDrawn")
-        }
+        visiblePoints.forEach { drawPoint(it) }
     }
 }
 
