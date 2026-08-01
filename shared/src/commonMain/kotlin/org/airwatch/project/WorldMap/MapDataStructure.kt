@@ -8,8 +8,6 @@ data class ChunkCorners(
     val bottomRightCorner: Coordinate
 )
 {
-
-
     //TODO{can i use !!. here}
     val minLat = bottomRightCorner.latitude ?:-90.0
     val maxLat = topLeftCorner.latitude ?: 90.0

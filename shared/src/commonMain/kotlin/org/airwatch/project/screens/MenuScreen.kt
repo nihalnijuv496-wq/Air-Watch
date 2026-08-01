@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +25,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import org.airwatch.project.APICommunication.fetchFlights
@@ -38,19 +38,17 @@ import org.airwatch.project.UIComponents.ScrollableColumn
 import org.airwatch.project.UIComponents.SideBar
 import org.airwatch.project.UIComponents.backGroundColor
 import org.airwatch.project.UIComponents.textColor
-import org.airwatch.project.WorldMap.loadMapToTree
+import org.airwatch.project.WorldMap.DrawMapCanvas
 
 
 @Composable
 fun MenuScreen() {
-    LaunchedEffect(Unit)
-    {
-        val tree = loadMapToTree()
-    }
+
 
     val logMessages = remember { mutableStateListOf<String>() } //TODO{"add time interval in which aircrafts are fetched", "abstract the log screen to new file"}
     var isSideBarVisible by remember { mutableStateOf(false) }
-    var isGlobeElseMap by remember { mutableStateOf(true)}
+    var mapState by remember { mutableStateOf("Plane") }
+    var mapScreenSize by remember { mutableStateOf(Pair(0, 0)) }
 
 
     Box(modifier = Modifier
@@ -105,20 +103,12 @@ fun MenuScreen() {
 
 
                     Button(
-                        onClick = {isGlobeElseMap = !isGlobeElseMap},
-                        content = {Text( if(isGlobeElseMap) "toMap" else "toGlobe" )}
+                        onClick = {
+                                mapState = if(mapState == "Plane") "Globe" else "Plane"
+                            },
+                        content = {Text( if(mapState == "Plane") "toGlobe" else "toPlane" )}
                     )
                 }
-            }
-
-            ColumnDivider()
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(fraction = 0.65f)
-            )
-            {
                 val scope = rememberCoroutineScope()
                 Button(
                     onClick = {scope.launch {
@@ -138,6 +128,24 @@ fun MenuScreen() {
                         println("* $it")
                     }},
                     content = {Text("showFull")})
+            }
+
+            ColumnDivider()
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(fraction = 0.65f)
+                    .onGloballyPositioned{ coordinates ->
+                        mapScreenSize = Pair(coordinates.size.height, coordinates.size.width)
+                    }
+            )
+            {
+
+
+                DrawMapCanvas(type = mapState, screenHeight = mapScreenSize.first, screenWidth = mapScreenSize.second)
+
+
             }
 
             ColumnDivider()

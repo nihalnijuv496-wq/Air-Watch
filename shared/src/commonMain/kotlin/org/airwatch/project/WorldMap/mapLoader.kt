@@ -43,7 +43,7 @@ suspend fun loadJsonFromResources(filePath: String): String {
 
 suspend fun loadMapToTree(): Chunk
 {
-    val filePath = "files/WorldMap.json"
+    val filePath = "files/WorldMapMedRes.json"
     val worldMapString = loadJsonFromResources(filePath)
     val worldMap: WorldMap = Json.decodeFromString(worldMapString)
 
