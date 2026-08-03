@@ -79,6 +79,26 @@ class EquirectangularProjection(
         )
     }
 
+    fun clampCamera() {
+
+        screenOffsets.cameraLat =
+            screenOffsets.cameraLat.coerceIn(-90.0, 90.0)
+
+        val visibleDegrees = viewportWidth / screenOffsets.scale
+
+        if (visibleDegrees >= 360) {
+            screenOffsets.cameraLon = 0.0
+        } else {
+            val halfVisible = visibleDegrees / 2
+
+            screenOffsets.cameraLon = screenOffsets.cameraLon.coerceIn(
+                -180.0 + halfVisible,
+                180.0 - halfVisible
+            )
+        }
+    }
+
+
 }
 
 class OrthographicProjection(

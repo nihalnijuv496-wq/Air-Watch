@@ -43,10 +43,11 @@ class EquirectangularProjectionOffset: ProjectionOffset
     var scale = MIN_SCALE
 
 
-    override fun updateCameraPos(offset: Offset)
-    {
-        cameraLon -= offset.x*MIN_SCALE/scale
-        cameraLat += offset.y*MIN_SCALE/scale
+    override fun updateCameraPos(offset: Offset) {
+        cameraLon -= offset.x * MIN_SCALE / scale
+        cameraLat += offset.y * MIN_SCALE / scale
+
+        cameraLat = cameraLat.coerceIn(-90.0, 90.0)
     }
 
     override fun changeScale(zoom: Float) {
