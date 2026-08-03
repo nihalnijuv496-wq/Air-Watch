@@ -1,7 +1,12 @@
 package org.airwatch.project.WorldMap
 
 import org.airwatch.project.Aircraft.Coordinate
+import org.airwatch.project.Utils.toRadians
+import kotlin.math.PI
+import kotlin.math.acos
+import kotlin.math.cos
 import kotlin.math.max
+import kotlin.math.sin
 
 data class ChunkCorners(
     val topLeftCorner: Coordinate,
@@ -22,6 +27,32 @@ data class ChunkCorners(
 
     fun center() = Coordinate((minLat + maxLat) / 2, (minLon + maxLon) / 2)
 
+    val isWholeSphere: Boolean = (maxLon - minLon) >= 359.999
+
+    private fun toUnitVector(lat: Double, lon: Double): DoubleArray {
+        val latRad = lat.toRadians()
+        val lonRad = lon.toRadians()
+        return doubleArrayOf(cos(latRad) * cos(lonRad), cos(latRad) * sin(lonRad), sin(latRad))
+    }
+
+    private val capCenterVec: DoubleArray by lazy {
+        val c = center()
+        toUnitVector(c.latitude ?: 0.0, c.longitude ?: 0.0)
+    }
+
+    val capAngularRadius: Double by lazy {
+        if (isWholeSphere) PI
+        else listOf(
+            toUnitVector(maxLat, minLon), toUnitVector(maxLat, maxLon),
+            toUnitVector(minLat, minLon), toUnitVector(minLat, maxLon)
+        ).maxOf { v ->
+            val dot = (capCenterVec[0]*v[0] + capCenterVec[1]*v[1] + capCenterVec[2]*v[2]).coerceIn(-1.0, 1.0)
+            acos(dot)
+        }
+    }
+
+    fun capDot(x: Double, y: Double, z: Double): Double =
+        capCenterVec[0]*x + capCenterVec[1]*y + capCenterVec[2]*z
 }
 
 
