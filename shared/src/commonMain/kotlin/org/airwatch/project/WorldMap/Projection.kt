@@ -27,8 +27,7 @@ class EquirectangularProjection(
     override fun project(coordinate: Coordinate): Coordinate {
 
         var deltaLon = coordinate.longitude!! - screenOffsets.cameraLon
-        if (deltaLon > 180) deltaLon -= 360
-        if (deltaLon < -180) deltaLon += 360
+        deltaLon = ((deltaLon + 180.0).mod(360.0)) - 180.0
 
         val deltaLat = coordinate.latitude!! - screenOffsets.cameraLat
 

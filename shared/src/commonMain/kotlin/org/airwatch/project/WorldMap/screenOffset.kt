@@ -44,7 +44,7 @@ class EquirectangularProjectionOffset: ProjectionOffset
 
 
     override fun updateCameraPos(offset: Offset) {
-        cameraLon -= offset.x * MIN_SCALE / scale
+        cameraLon = (((cameraLon - offset.x*MIN_SCALE/scale) + 180.0).mod(360.0)) - 180.0
         cameraLat += offset.y * MIN_SCALE / scale
     }
 
