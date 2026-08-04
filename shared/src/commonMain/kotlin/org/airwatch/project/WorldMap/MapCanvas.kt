@@ -70,7 +70,7 @@ fun DrawMapCanvas(type: String, screenWidth: Int, screenHeight: Int)
     Canvas(modifier = Modifier
         .fillMaxSize()
         .clipToBounds()
-        .pointerInput(Unit)
+        .pointerInput(type)
         {
             detectTransformGestures { centroid, pan, zoom, rotation ->
                 projection.screenOffsets.changeScale(zoom)
