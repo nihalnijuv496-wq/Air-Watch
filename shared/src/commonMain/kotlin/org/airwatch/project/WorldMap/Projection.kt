@@ -2,7 +2,6 @@ package org.airwatch.project.WorldMap
 
 import org.airwatch.project.Aircraft.Coordinate
 import org.airwatch.project.Utils.toRadians
-import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.sin
@@ -45,60 +44,29 @@ class EquirectangularProjection(
         screenHeight: Int,
     ): Boolean
     {
-        var minDelta = corners.minLon - screenOffsets.cameraLon
-        var maxDelta = corners.maxLon - screenOffsets.cameraLon
+        val halfSpan = (corners.maxLon - corners.minLon) / 2.0
+        var centerDelta = ((corners.minLon + corners.maxLon) / 2.0) - screenOffsets.cameraLon
+        centerDelta = ((centerDelta + 180.0).mod(360.0)) - 180.0
 
-        while (minDelta > 180) { minDelta -= 360; maxDelta -= 360 }
-        while (minDelta < -180) { minDelta += 360; maxDelta += 360 }
-        if (maxDelta < minDelta) maxDelta += 360 // restore ordering if the seam cut the chunk
+        val minDelta = centerDelta - halfSpan
+        val maxDelta = centerDelta + halfSpan
 
-        val minX = viewportWidth / 2f + (minDelta * screenOffsets.scale)
-        val maxX = viewportWidth / 2f + (maxDelta * screenOffsets.scale)
+        val minX = viewportWidth/2f + (minDelta*screenOffsets.scale)
+        val maxX = viewportWidth/2f + (maxDelta*screenOffsets.scale)
 
-        val topLeftCorner = project(corners.topLeftCorner)
-        val bottomRightCorner = project(corners.bottomRightCorner)
+        val topY = viewportHeight/2f - ((corners.maxLat - screenOffsets.cameraLat)*screenOffsets.scale)
+        val bottomY = viewportHeight/2f - ((corners.minLat - screenOffsets.cameraLat)*screenOffsets.scale)
 
-        if (
-            minX < screenWidth &&
-            maxX > 0 &&
-            topLeftCorner.latitude!! < screenHeight &&
-            bottomRightCorner.latitude!! > 0
-        ) return true
-
-        return false
+        return minX < screenWidth && maxX > 0 && topY < screenHeight && bottomY > 0
     }
 
     override fun chunkScreenSpan(corners: ChunkCorners): Double
     {
-        val topLeftCorner = project(corners.topLeftCorner)
-        val bottomRightCorner = project(corners.bottomRightCorner)
+        val latSpanPx = (corners.maxLat - corners.minLat) * screenOffsets.scale
+        val lonSpanPx = (corners.maxLon - corners.minLon) * screenOffsets.scale
 
-        return max(
-            abs(topLeftCorner.latitude!! - bottomRightCorner.latitude!!),
-            abs(topLeftCorner.longitude!! - bottomRightCorner.longitude!!)
-        )
+        return max(latSpanPx, lonSpanPx)
     }
-
-    fun clampCamera() {
-
-        screenOffsets.cameraLat =
-            screenOffsets.cameraLat.coerceIn(-90.0, 90.0)
-
-        val visibleDegrees = viewportWidth / screenOffsets.scale
-
-        if (visibleDegrees >= 360) {
-            screenOffsets.cameraLon = 0.0
-        } else {
-            val halfVisible = visibleDegrees / 2
-
-            screenOffsets.cameraLon = screenOffsets.cameraLon.coerceIn(
-                -180.0 + halfVisible,
-                180.0 - halfVisible
-            )
-        }
-    }
-
-
 }
 
 class OrthographicProjection(
