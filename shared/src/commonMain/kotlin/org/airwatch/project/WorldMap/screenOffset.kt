@@ -34,7 +34,7 @@ class OrthographicProjectionOffset : ProjectionOffset
 
 }
 
-class EquirectangularProjectionOffset: ProjectionOffset
+class EquirectangularProjectionOffset : ProjectionOffset
 {
     override var cameraLat by mutableStateOf(0.0)
     override var cameraLon by mutableStateOf(0.0)

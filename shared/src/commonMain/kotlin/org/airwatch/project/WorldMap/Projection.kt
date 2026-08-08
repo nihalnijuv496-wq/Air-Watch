@@ -1,5 +1,6 @@
 package org.airwatch.project.WorldMap
 
+import androidx.compose.ui.geometry.Offset
 import org.airwatch.project.Aircraft.Coordinate
 import org.airwatch.project.Utils.toRadians
 import kotlin.math.cos
@@ -15,6 +16,9 @@ interface Projection {
         screenHeight: Int,
     ): Boolean
     fun chunkScreenSpan(corners: ChunkCorners): Double
+
+    fun pan(offset: Offset)
+    fun zoom(factor: Float)
 }
 
 class EquirectangularProjection(
@@ -65,6 +69,28 @@ class EquirectangularProjection(
         val lonSpanPx = (corners.maxLon - corners.minLon) * screenOffsets.scale
 
         return max(latSpanPx, lonSpanPx)
+    }
+
+    fun clampCameraLat() {
+        val halfHeightDeg = (viewportHeight / 2.0) / screenOffsets.scale
+        val minLat = -90.0 + halfHeightDeg
+        val maxLat = 90.0 - halfHeightDeg
+
+        screenOffsets.cameraLat = if (minLat > maxLat) {
+            0.0
+        } else {
+            screenOffsets.cameraLat.coerceIn(minLat, maxLat)
+        }
+    }
+
+    override fun pan(offset: Offset) {
+        screenOffsets.updateCameraPos(offset)
+        clampCameraLat()
+    }
+
+    override fun zoom(factor: Float) {
+        screenOffsets.changeScale(factor)
+        clampCameraLat()
     }
 }
 
@@ -127,6 +153,14 @@ class OrthographicProjection(
         // visible iff the chunk's cap overlaps the camera-facing hemisphere:
         // angle(camera, chunkCenter) < 90° + capAngularRadius  <=>  dot > -sin(capAngularRadius)
         return corners.capDot(camX, camY, camZ) > -sin(corners.capAngularRadius)
+    }
+
+    override fun pan(offset: Offset) {
+        screenOffsets.updateCameraPos(offset)
+    }
+
+    override fun zoom(factor: Float) {
+        screenOffsets.changeScale(factor)
     }
 }
 

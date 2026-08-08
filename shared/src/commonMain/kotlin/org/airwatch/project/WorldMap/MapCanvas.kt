@@ -73,8 +73,8 @@ fun DrawMapCanvas(type: String, screenWidth: Int, screenHeight: Int)
         .pointerInput(type)
         {
             detectTransformGestures { centroid, pan, zoom, rotation ->
-                projection.screenOffsets.changeScale(zoom)
-                projection.screenOffsets.updateCameraPos(pan)
+                projection.pan(pan)
+                projection.zoom(zoom)
             }
         })
     {
