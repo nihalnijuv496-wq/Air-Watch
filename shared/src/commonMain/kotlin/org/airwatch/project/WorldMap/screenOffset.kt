@@ -19,8 +19,8 @@ class OrthographicProjectionOffset : ProjectionOffset
     override var cameraLon by mutableStateOf(0.0)
 
     val MIN_RADIUS = 250.0
-    val MAX_RADIUS = 4000.0
-    var globeRadiusPx: Double = 250.0
+    val MAX_RADIUS = 1000.0
+    var globeRadiusPx: Double = MIN_RADIUS
 
     override fun updateCameraPos(offset: Offset)
     {

@@ -43,10 +43,8 @@ fun updateAircraftList(newList:MutableState<List<AirCraft>>)
     _airCrafts = newList
 }
 
-fun currShowableAirCrafts() =if(Filter.isFiltering) Filter.filteredAirCrafts else airCrafts
-    //Filter.filteredAirCrafts.ifEmpty { airCrafts }
-
-
+fun currShowableAirCrafts() = if(Filter.isFiltering) Filter.filteredAirCrafts else airCrafts
+//TODO{"change the data structure to a map to fasten the filtering. also add a viewmodel for this"}
 
 fun JsonArray.toAirCraft(): AirCraft
 {

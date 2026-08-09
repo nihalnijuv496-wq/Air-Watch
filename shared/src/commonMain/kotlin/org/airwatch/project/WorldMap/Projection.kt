@@ -151,7 +151,7 @@ class OrthographicProjection(
         val camZ = sin(camLatRad)
 
         // visible iff the chunk's cap overlaps the camera-facing hemisphere:
-        // angle(camera, chunkCenter) < 90° + capAngularRadius  <=>  dot > -sin(capAngularRadius)
+        // angle(camera, chunkCenter) < 90° + capAngularRadius  iff  dot > -sin(capAngularRadius)
         return corners.capDot(camX, camY, camZ) > -sin(corners.capAngularRadius)
     }
 

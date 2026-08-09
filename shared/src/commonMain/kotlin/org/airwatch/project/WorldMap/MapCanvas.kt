@@ -20,6 +20,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import org.airwatch.project.Aircraft.Coordinate
+import org.airwatch.project.Aircraft.currShowableAirCrafts
+import org.airwatch.project.WorldMap.AircraftDrawer.drawAircraft
 
 @Composable
 fun DrawMapCanvas(type: String, screenWidth: Int, screenHeight: Int)
@@ -31,11 +33,7 @@ fun DrawMapCanvas(type: String, screenWidth: Int, screenHeight: Int)
             loadMapToTree()
         }
     }
-
     val tree = coordinateTree ?: return
-
-
-
 
     val projection = remember(type, screenWidth, screenHeight)
     {
@@ -67,6 +65,18 @@ fun DrawMapCanvas(type: String, screenWidth: Int, screenHeight: Int)
         }
     }
 
+    // add currShowableAirCrafts() in a viewmodel and then run it and add ky here
+    val visibleAircrafts by remember (projection, screenWidth, screenHeight) {
+        derivedStateOf {
+            buildMap {
+                currShowableAirCrafts().forEach { aircraft ->
+                    val projectedPosition = projection.project(aircraft.position)
+                    projectedPosition?.let { put(aircraft.icao24, projectedPosition) }
+                }
+            }
+        }
+    }
+
     Canvas(modifier = Modifier
         .fillMaxSize()
         .clipToBounds()
@@ -79,6 +89,9 @@ fun DrawMapCanvas(type: String, screenWidth: Int, screenHeight: Int)
         })
     {
         visiblePoints.forEach { drawPoint(it) }
+        visibleAircrafts.forEach { (_, position) ->
+            drawAircraft(position)
+        }
     }
 }
 
