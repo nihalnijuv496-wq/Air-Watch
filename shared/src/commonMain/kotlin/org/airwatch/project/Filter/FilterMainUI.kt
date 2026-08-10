@@ -19,8 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import org.airwatch.project.Aircraft.AirCraft
-import org.airwatch.project.Filter.Filter.clearFilter
 import org.airwatch.project.Filter.FilterSubUI.AltitudeBar
 import org.airwatch.project.Filter.FilterSubUI.AreaBar
 import org.airwatch.project.Filter.FilterSubUI.CountryBar
@@ -34,7 +34,7 @@ import org.airwatch.project.UIComponents.secondaryColor
 import org.airwatch.project.UIComponents.textColor
 
 @Composable
-fun FilterSideBarContent(data: List<AirCraft>)
+fun FilterSideBarContent(data: List<AirCraft>, filterViewModel: FilterViewModel = viewModel())
 {
     var currentFilterBar: String by remember { mutableStateOf("icao4") }
 
@@ -74,40 +74,43 @@ fun FilterSideBarContent(data: List<AirCraft>)
                 Spacer(modifier = Modifier.weight(1f))
 
                 BasicButton(
-                    onClick = { clearFilter() },
+                    onClick = { filterViewModel.clearFilter() },
                     content = { Text("Clear") }
                 )
-                BasicButton(content = { Text("Apply") }, onClick = {Filter.filterAll()})
+                BasicButton(content = { Text("Apply") }, onClick = {
+                    filterViewModel.filterAll(data)
+                })
             }
 
             RowDivider()
 
             Column(modifier = Modifier.fillMaxSize())
             {
+                val queries = FilterViewModel.Queries
                 when(currentFilterBar)
                 {
                     "icao4" -> {
-                        ICAO4Bar(data.mapTo(HashSet()){it.icao24})
+                        ICAO4Bar(data.mapTo(HashSet()){it.icao24}, queries.icao4Queries)
                     }
 
                     "originCountry" -> {
-                        CountryBar(data.mapTo(HashSet()) { it.originCountry })
+                        CountryBar(data.mapTo(HashSet()) { it.originCountry }, queries.countryQueries)
                     }
 
                     "area" -> {
-                        AreaBar()
+                        AreaBar(queries.areaQuery)
                     }
 
                     "altitude" -> {
-                        AltitudeBar()
+                        AltitudeBar(queries.altitudeQuery)
                     }
 
                     "velocity" -> {
-                        VelocityBar()
+                        VelocityBar(queries.velocityQuery)
                     }
 
                     "direction" -> {
-                        DirectionBar()
+                        DirectionBar(queries.angleQuery)
                     }
 
                     else -> {

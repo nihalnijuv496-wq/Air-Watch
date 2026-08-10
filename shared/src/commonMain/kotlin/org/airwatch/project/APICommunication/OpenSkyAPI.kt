@@ -1,7 +1,5 @@
 package org.airwatch.project.APICommunication
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -9,7 +7,7 @@ import org.airwatch.project.Aircraft.AirCraft
 import org.airwatch.project.Aircraft.OpenSkyResponse
 import org.airwatch.project.Aircraft.toAirCraft
 
-suspend fun fetchFlights(): MutableState<List<AirCraft>>
+suspend fun fetchFlights(): List<AirCraft>
 {
     val response: OpenSkyResponse = httpClient.get("https://opensky-network.org/api/states/all")
     {
@@ -19,5 +17,5 @@ suspend fun fetchFlights(): MutableState<List<AirCraft>>
         parameter("lomax", 80.0)
     }.body()
 
-    return mutableStateOf(response.states.map { it.toAirCraft() })
+    return (response.states.map { it.toAirCraft() })
 }

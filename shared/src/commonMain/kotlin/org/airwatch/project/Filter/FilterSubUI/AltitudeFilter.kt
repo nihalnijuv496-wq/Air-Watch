@@ -7,11 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.airwatch.project.Filter.Filter
+import org.airwatch.project.Aircraft.AltitudeRange
 import org.airwatch.project.UIComponents.TextBoxForDouble
 
 @Composable
-fun AltitudeBar() {
+fun AltitudeBar(altitudeQuery: AltitudeRange) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -20,18 +20,18 @@ fun AltitudeBar() {
     {
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.altitudeQuery.minAltitude = value
+                altitudeQuery.minAltitude = value
             },
             label = { Text("minimum altitude: ") },
-            initialVal = Filter.Queries.altitudeQuery.minAltitude?.toString()
+            initialVal = altitudeQuery.minAltitude?.toString()
         )
 
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.altitudeQuery.maxAltitude = value
+                altitudeQuery.maxAltitude = value
             },
             label = { Text("maximum altitude: ") },
-            initialVal = Filter.Queries.altitudeQuery.maxAltitude?.toString()
+            initialVal = altitudeQuery.maxAltitude?.toString()
         )
 
     }

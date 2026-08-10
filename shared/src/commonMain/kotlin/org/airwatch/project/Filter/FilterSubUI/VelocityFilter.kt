@@ -7,11 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.airwatch.project.Filter.Filter
+import org.airwatch.project.Aircraft.VelocityRange
 import org.airwatch.project.UIComponents.TextBoxForDouble
 
 @Composable
-fun VelocityBar() {
+fun VelocityBar(velocityQuery: VelocityRange) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -20,18 +20,18 @@ fun VelocityBar() {
     {
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.velocityQuery.minVelocity = value
+                velocityQuery.minVelocity = value
             },
             label = { Text("minimum velocity: ") },
-            initialVal = Filter.Queries.velocityQuery.minVelocity?.toString()
+            initialVal = velocityQuery.minVelocity?.toString()
         )
 
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.velocityQuery.maxVelocity = value
+                velocityQuery.maxVelocity = value
             },
             label = { Text("maximum velocity: ") },
-            initialVal = Filter.Queries.velocityQuery.maxVelocity?.toString()
+            initialVal = velocityQuery.maxVelocity?.toString()
         )
 
     }

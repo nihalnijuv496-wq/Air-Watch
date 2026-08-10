@@ -27,12 +27,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import org.airwatch.project.APICommunication.fetchFlights
-import org.airwatch.project.Aircraft.airCrafts
-import org.airwatch.project.Aircraft.currShowableAirCrafts
-import org.airwatch.project.Aircraft.updateAircraftList
+import org.airwatch.project.Aircraft.AircraftViewModel
 import org.airwatch.project.Filter.FilterSideBarContent
+import org.airwatch.project.Filter.FilterViewModel
 import org.airwatch.project.UIComponents.ColumnDivider
 import org.airwatch.project.UIComponents.ScrollableColumn
 import org.airwatch.project.UIComponents.SideBar
@@ -42,7 +42,9 @@ import org.airwatch.project.WorldMap.DrawMapCanvas
 
 
 @Composable
-fun MenuScreen() {
+fun MenuScreen(
+    aircraftViewModel: AircraftViewModel = viewModel(),
+    filerViewModel: FilterViewModel = viewModel ()) {
 
 
     val logMessages = remember { mutableStateListOf<String>() } //TODO{"add time interval in which aircrafts are fetched", "abstract the log screen to new file"}
@@ -112,19 +114,19 @@ fun MenuScreen() {
                 val scope = rememberCoroutineScope()
                 Button(
                     onClick = {scope.launch {
-                        updateAircraftList(fetchFlights())
-                        logMessages.add("fetched ${currShowableAirCrafts().size} aircrafts")
-                        currShowableAirCrafts().forEach { println(it) }
+                        aircraftViewModel.updateAircraftList(fetchFlights())
+                        logMessages.add("fetched ${aircraftViewModel.getShowableAircrafts(filerViewModel.isFiltering, filerViewModel.filteredAirCrafts).size} aircrafts")
+                        aircraftViewModel.getShowableAircrafts(filerViewModel.isFiltering, filerViewModel.filteredAirCrafts).forEach { println(it) }
                     } },
                     content = { Text (text = "getFlights")}
                 )
                 Button(
-                    onClick = {currShowableAirCrafts().forEach {
+                    onClick = {aircraftViewModel.getShowableAircrafts(filerViewModel.isFiltering, filerViewModel.filteredAirCrafts).forEach {
                         println("* $it")
                     }},
                     content = {Text("showVisible")})
                 Button(
-                    onClick = {airCrafts.forEach {
+                    onClick = {aircraftViewModel.airCrafts.value.forEach {
                         println("* $it")
                     }},
                     content = {Text("showFull")})
@@ -172,7 +174,7 @@ fun MenuScreen() {
                 .fillMaxHeight()
                 .fillMaxWidth(0.85f)
                 .align(Alignment.CenterStart),
-            contentFun = { FilterSideBarContent(data = airCrafts) }
+            contentFun = { FilterSideBarContent(data = aircraftViewModel.airCrafts.value) }
         )
     }
 

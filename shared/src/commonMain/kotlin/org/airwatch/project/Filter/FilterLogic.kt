@@ -1,29 +1,31 @@
 package org.airwatch.project.Filter
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
 import org.airwatch.project.Aircraft.AirCraft
 import org.airwatch.project.Aircraft.AltitudeRange
 import org.airwatch.project.Aircraft.AngleRange
 import org.airwatch.project.Aircraft.AreaRangeByCoordinate
 import org.airwatch.project.Aircraft.Coordinate
 import org.airwatch.project.Aircraft.VelocityRange
-import org.airwatch.project.Aircraft.airCrafts
-import org.airwatch.project.Aircraft.currShowableAirCrafts
-import org.airwatch.project.Filter.Filter.Queries.altitudeQuery
-import org.airwatch.project.Filter.Filter.Queries.angleQuery
-import org.airwatch.project.Filter.Filter.Queries.areaQuery
-import org.airwatch.project.Filter.Filter.Queries.clearQueries
-import org.airwatch.project.Filter.Filter.Queries.countryQueries
-import org.airwatch.project.Filter.Filter.Queries.icao4Queries
-import org.airwatch.project.Filter.Filter.Queries.velocityQuery
+import org.airwatch.project.Filter.FilterViewModel.Queries.altitudeQuery
+import org.airwatch.project.Filter.FilterViewModel.Queries.angleQuery
+import org.airwatch.project.Filter.FilterViewModel.Queries.areaQuery
+import org.airwatch.project.Filter.FilterViewModel.Queries.clearQueries
+import org.airwatch.project.Filter.FilterViewModel.Queries.countryQueries
+import org.airwatch.project.Filter.FilterViewModel.Queries.icao4Queries
+import org.airwatch.project.Filter.FilterViewModel.Queries.velocityQuery
 
 
-object Filter
+class FilterViewModel : ViewModel()
 {
     private val pFilteredAirCrafts = mutableStateListOf<AirCraft>()
     val filteredAirCrafts: MutableList<AirCraft> get() = pFilteredAirCrafts
-    var isFiltering = false
+    var isFiltering by mutableStateOf(false)
+        private set
 
 
 
@@ -42,7 +44,10 @@ object Filter
         ).value
 
         val velocityQuery = mutableStateOf(
-            VelocityRange(startValue = null, endValue = null) // use minVelocity and maxVelocity to access
+            VelocityRange(
+                startValue = null,
+                endValue = null
+            ) // use minVelocity and maxVelocity to access
         ).value
 
         val angleQuery = mutableStateOf(
@@ -60,7 +65,6 @@ object Filter
         }
     }
 
-
     fun clearFilter()
     {
         isFiltering = false
@@ -73,7 +77,7 @@ object Filter
         newList.forEach { filteredAirCrafts.add(it) }
     }
 
-    fun filterAll() {
+    fun filterAll(airCrafts : List<AirCraft>) {
         setFilteredAirCraft(
             airCrafts.filter{
                 (icao4Queries.isEmpty() || it.icao24 in icao4Queries) &&
@@ -84,9 +88,8 @@ object Filter
                         (angleQuery.isEmpty() || angleQuery.isInBound(it.trueTrack))
             }
         )
+
         isFiltering = true
-        println("---")
-        currShowableAirCrafts().forEach { println("*${it}") }
     }
 
 }

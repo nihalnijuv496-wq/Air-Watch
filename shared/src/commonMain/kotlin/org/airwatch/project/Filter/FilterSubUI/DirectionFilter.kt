@@ -7,11 +7,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.airwatch.project.Filter.Filter
+import org.airwatch.project.Aircraft.AngleRange
 import org.airwatch.project.UIComponents.TextBoxForDouble
 
 @Composable
-fun DirectionBar() {
+fun DirectionBar(angleQuery: AngleRange) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
@@ -20,18 +20,18 @@ fun DirectionBar() {
     {
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.angleQuery.minAngle = value
+                angleQuery.minAngle = value
             },
             label = { Text("Starting angle: ") },
-            initialVal = Filter.Queries.angleQuery.minAngle?.toString()
+            initialVal = angleQuery.minAngle?.toString()
         )
 
         TextBoxForDouble(
             onValueChange = { value ->
-                Filter.Queries.angleQuery.maxAngle = value
+                angleQuery.maxAngle = value
             },
             label = { Text("Ending angle: ") },
-            initialVal = Filter.Queries.angleQuery.maxAngle?.toString()
+            initialVal = angleQuery.maxAngle?.toString()
         )
 
     }
