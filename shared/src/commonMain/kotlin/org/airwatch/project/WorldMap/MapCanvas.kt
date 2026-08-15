@@ -61,7 +61,7 @@ fun DrawMapCanvas(type: String, screenWidth: Int, screenHeight: Int,
     val visiblePoints by remember(tree, projection, screenWidth, screenHeight) {
         derivedStateOf {
             buildList {
-                traverse(tree, projection, screenWidth, screenHeight) { node ->
+                tree.traverse(projection, screenWidth, screenHeight) { node ->
                     node.coordinates.forEach { coordinate ->
                         projection.project(coordinate)?.let { add(it) }
                     }

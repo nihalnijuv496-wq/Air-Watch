@@ -65,6 +65,7 @@ data class Chunk(val chunkCorners: ChunkCorners, val depth: Int)
     {
         const val MAX_COORDINATES_PER_NODE = 15
         const val MAX_DEPTH = 10
+        private const val LOD_PIXEL_THRESHOLD = 5.0
     }
 
     fun subdivide() {
@@ -107,5 +108,38 @@ data class Chunk(val chunkCorners: ChunkCorners, val depth: Int)
         val d3 = getDepth(root.children!![3])
 
         return 1 + max(max(d0, d1), max(d2, d3))
+    }
+
+    fun traverse(
+        projection: Projection,
+        screenWidth: Int,
+        screenHeight: Int,
+        onRender: (Chunk) -> Unit
+    ) {
+        if (!projection.isChunkVisible(
+                corners = chunkCorners,
+                screenWidth = screenWidth,
+                screenHeight = screenHeight
+            )
+        ) {
+            return
+        }
+
+        val screenSpan = projection.chunkScreenSpan(chunkCorners)
+        val currentChildren = children
+
+        if (screenSpan < LOD_PIXEL_THRESHOLD || currentChildren == null) {
+            onRender(this)
+            return
+        }
+
+        for (child in currentChildren) {
+            child.traverse(
+                projection = projection,
+                screenWidth = screenWidth,
+                screenHeight = screenHeight,
+                onRender = onRender
+            )
+        }
     }
 }
