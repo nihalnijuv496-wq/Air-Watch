@@ -21,16 +21,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.launch
-import org.airwatch.project.APICommunication.fetchFlights
 import org.airwatch.project.Aircraft.AircraftViewModel
+import org.airwatch.project.Aircraft.AircraftViewModelFactory
 import org.airwatch.project.Filter.FilterSideBarContent
 import org.airwatch.project.Filter.FilterViewModel
 import org.airwatch.project.UIComponents.ColumnDivider
@@ -43,7 +41,7 @@ import org.airwatch.project.WorldMap.DrawMapCanvas
 
 @Composable
 fun MenuScreen(
-    aircraftViewModel: AircraftViewModel = viewModel(),
+    aircraftViewModel: AircraftViewModel = viewModel(factory = AircraftViewModelFactory),
     filerViewModel: FilterViewModel = viewModel ()) {
 
 
@@ -111,14 +109,14 @@ fun MenuScreen(
                         content = {Text( if(mapState == "Plane") "toGlobe" else "toPlane" )}
                     )
                 }
-                val scope = rememberCoroutineScope()
+                //val scope = rememberCoroutineScope()
                 Button(
-                    onClick = {scope.launch {
+                    onClick = {println("nothing")}/*{scope.launch {
                         aircraftViewModel.updateAircraftList(fetchFlights())
                         logMessages.add("fetched ${aircraftViewModel.getShowableAircrafts(filerViewModel.isFiltering, filerViewModel.filteredAirCrafts).size} aircrafts")
                         aircraftViewModel.getShowableAircrafts(filerViewModel.isFiltering, filerViewModel.filteredAirCrafts).forEach { println(it) }
-                    } },
-                    content = { Text (text = "getFlights")}
+                    } }*/,
+                    content = { Text (text = "temp")}
                 )
                 Button(
                     onClick = {aircraftViewModel.getShowableAircrafts(filerViewModel.isFiltering, filerViewModel.filteredAirCrafts).forEach {

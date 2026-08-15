@@ -3,6 +3,9 @@ package org.airwatch.project.Aircraft
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import io.ktor.client.HttpClient
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.booleanOrNull
@@ -10,6 +13,9 @@ import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.doubleOrNull
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonPrimitive
+import org.airwatch.project.APICommunication.FlightTracker
+import org.airwatch.project.APICommunication.OpenSkyAuth
+import org.airwatch.project.shared.BuildConfig
 
 
 @Serializable
@@ -35,24 +41,28 @@ data class AirCraft (
     val squawk: String?,
     val spi: Boolean?,
 )
-/*
-var _airCrafts = mutableStateOf<List<AirCraft>>(emptyList())
-val airCrafts: List<AirCraft> get() = _airCrafts.value
 
-fun updateAircraftList(newList:MutableState<List<AirCraft>>)
-{
-    _airCrafts = newList
-}
+class AircraftViewModel(
+    private val httpClient: HttpClient
+) : ViewModel() {
 
-fun currShowableAirCrafts() = if(Filter.isFiltering) Filter.filteredAirCrafts else airCrafts
-//TODO{"change the data structure to a map to fasten the filtering. also add a viewmodel for this"}
-*/
-
-class AircraftViewModel : ViewModel() {
+    private val auth = OpenSkyAuth(
+        httpClient = httpClient,
+        clientId = BuildConfig.OPENSKY_CLIENT_ID,
+        clientSecret = BuildConfig.OPENSKY_CLIENT_SECRET
+    )
+    private val tracker = FlightTracker(httpClient, auth)
 
     private val _airCrafts = mutableStateOf<List<AirCraft>>(emptyList())
-
     val airCrafts: State<List<AirCraft>> get() = _airCrafts
+
+    init {
+        viewModelScope.launch {
+            tracker.flightUpdates().collect { flights ->
+                updateAircraftList(flights)
+            }
+        }
+    }
 
     fun updateAircraftList(newList: List<AirCraft>) {
         _airCrafts.value = newList
@@ -61,7 +71,6 @@ class AircraftViewModel : ViewModel() {
     fun getShowableAircrafts(isFiltering: Boolean, filteredAirCrafts: List<AirCraft>) =
         if (isFiltering) filteredAirCrafts else _airCrafts.value
 }
-
 
 
 fun JsonArray.toAirCraft(): AirCraft

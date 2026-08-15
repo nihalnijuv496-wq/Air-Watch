@@ -21,13 +21,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import org.airwatch.project.Aircraft.AircraftViewModel
+import org.airwatch.project.Aircraft.AircraftViewModelFactory
 import org.airwatch.project.Aircraft.Coordinate
 import org.airwatch.project.Filter.FilterViewModel
 import org.airwatch.project.WorldMap.AircraftDrawer.drawAircraft
 
 @Composable
 fun DrawMapCanvas(type: String, screenWidth: Int, screenHeight: Int,
-                  aircraftViewModel: AircraftViewModel = viewModel(),
+                  aircraftViewModel: AircraftViewModel = viewModel(factory = AircraftViewModelFactory),
                   filerViewModel : FilterViewModel = viewModel())
 {
     var coordinateTree by remember { mutableStateOf<Chunk?>(null) }
@@ -69,15 +70,16 @@ fun DrawMapCanvas(type: String, screenWidth: Int, screenHeight: Int,
         }
     }
 
-    // add currShowableAirCrafts() in a viewmodel and then run it and add key here
     val showableAircrafts = aircraftViewModel.getShowableAircrafts(filerViewModel.isFiltering, filerViewModel.filteredAirCrafts)
     val visibleAircrafts by remember (filerViewModel.isFiltering,filerViewModel.filteredAirCrafts.toList(), showableAircrafts, projection, screenWidth, screenHeight) {
         derivedStateOf {
             buildMap {
-                showableAircrafts.forEach { aircraft ->
-                    val projectedPosition = projection.project(aircraft.position)
-                    projectedPosition?.let { put(aircraft.icao24, projectedPosition) }
-                }
+                showableAircrafts
+                    .filter { it.position.latitude != null && it.position.longitude != null }
+                    .forEach { aircraft ->
+                        val projectedPosition = projection.project(aircraft.position)
+                        projectedPosition?.let { put(aircraft.icao24, it) }
+                    }
             }
         }
     }
@@ -87,7 +89,7 @@ fun DrawMapCanvas(type: String, screenWidth: Int, screenHeight: Int,
         .clipToBounds()
         .pointerInput(type)
         {
-            detectTransformGestures { centroid, pan, zoom, rotation ->
+            detectTransformGestures { _, pan, zoom, _ ->
                 projection.pan(pan)
                 projection.zoom(zoom)
             }
