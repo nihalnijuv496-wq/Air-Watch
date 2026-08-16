@@ -9,7 +9,7 @@ import kotlin.math.sin
 
 interface Projection {
     val screenOffsets: ProjectionOffset
-    fun project(coordinate: Coordinate): Coordinate?
+    fun project(coordinate: Coordinate): Offset?
     fun isChunkVisible(
         corners: ChunkCorners,
         screenWidth: Int,
@@ -28,17 +28,17 @@ class EquirectangularProjection(
 
     override val screenOffsets = EquirectangularProjectionOffset()
 
-    override fun project(coordinate: Coordinate): Coordinate {
+    override fun project(coordinate: Coordinate): Offset {
 
         var deltaLon = coordinate.longitude!! - screenOffsets.cameraLon
         deltaLon = ((deltaLon + 180.0).mod(360.0)) - 180.0
 
         val deltaLat = coordinate.latitude!! - screenOffsets.cameraLat
 
-        val x = viewportWidth / 2f + (deltaLon * screenOffsets.scale)
-        val y = viewportHeight / 2f - (deltaLat * screenOffsets.scale)
+        val x = (viewportWidth / 2f + (deltaLon * screenOffsets.scale)).toFloat()
+        val y = (viewportHeight / 2f - (deltaLat * screenOffsets.scale)).toFloat()
 
-        return Coordinate(y, x) //always non null, in pixels
+        return Offset(x, y) //always non null, in pixels
     }
 
     override fun isChunkVisible(
@@ -101,7 +101,7 @@ class OrthographicProjection(
 
     override val screenOffsets = OrthographicProjectionOffset()
 
-    override fun project(coordinate: Coordinate): Coordinate? {
+    override fun project(coordinate: Coordinate): Offset? {
         val latRad = coordinate.latitude!!.toRadians()
         val lonRad = coordinate.longitude!!.toRadians()
         val camLatRad = screenOffsets.cameraLat.toRadians()
@@ -127,10 +127,10 @@ class OrthographicProjection(
         if (x2 < 0) return null
 
         // orthographic drop: just take y2, z2 as screen coordinates, ignore x2
-        val screenX = viewportWidth / 2f + (y2 * screenOffsets.globeRadiusPx)
-        val screenY = viewportHeight / 2f - (z2 * screenOffsets.globeRadiusPx)
+        val screenX = (viewportWidth / 2f + (y2 * screenOffsets.globeRadiusPx)).toFloat()
+        val screenY = (viewportHeight / 2f - (z2 * screenOffsets.globeRadiusPx)).toFloat()
 
-        return Coordinate(screenY, screenX) // value is in pixels
+        return Offset(screenX, screenY) // value is in pixels
     }
 
     override fun chunkScreenSpan(corners: ChunkCorners): Double =

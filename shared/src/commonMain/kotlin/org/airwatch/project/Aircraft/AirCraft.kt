@@ -60,6 +60,7 @@ class AircraftViewModel(
         viewModelScope.launch {
             tracker.flightUpdates().collect { flights ->
                 updateAircraftList(flights)
+                println(flights)
             }
         }
     }

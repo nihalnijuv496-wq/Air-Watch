@@ -12,9 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,9 +21,8 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import org.airwatch.project.Aircraft.AircraftViewModel
 import org.airwatch.project.Aircraft.AircraftViewModelFactory
-import org.airwatch.project.Aircraft.Coordinate
 import org.airwatch.project.Filter.FilterViewModel
-import org.airwatch.project.WorldMap.AircraftDrawer.drawAircraft
+import org.airwatch.project.WorldMap.AircraftDrawer.drawAircrafts
 
 @Composable
 fun DrawMapCanvas(type: String, screenWidth: Int, screenHeight: Int,
@@ -95,18 +93,12 @@ fun DrawMapCanvas(type: String, screenWidth: Int, screenHeight: Int,
             }
         })
     {
-        visiblePoints.forEach { drawPoint(it) }
-        visibleAircrafts.forEach { (_, position) ->
-            drawAircraft(position)
-        }
+        drawPoints(
+            points = visiblePoints,
+            pointMode = PointMode.Points,
+            color = Color.Black,
+            strokeWidth = 0.5f
+        )
+        drawAircrafts(visibleAircrafts)
     }
-}
-
-fun DrawScope.drawPoint(coordinate: Coordinate)
-{
-    drawCircle(
-        color = Color.Black,
-        radius = 0.5f,
-        center = Offset(coordinate.longitude!!.toFloat(), coordinate.latitude!!.toFloat())
-    )
 }

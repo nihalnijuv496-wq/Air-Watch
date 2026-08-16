@@ -5,7 +5,6 @@ import io.ktor.client.call.body
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.client.request.header
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import org.airwatch.project.Aircraft.AirCraft
 import org.airwatch.project.Aircraft.OpenSkyResponse
 import org.airwatch.project.Aircraft.toAirCraft
@@ -41,13 +39,29 @@ class OpenSkyAuth(
 
     suspend fun getToken(): String {
 
+
         if (cachedToken != null && Clock.System.now() < tokenExpiresAt) {
             return cachedToken!!
         }
 
+        val response: TokenResponse = httpClient.submitForm(
+            url = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token",
+            formParameters = Parameters.build {
+                append("grant_type", "client_credentials")
+                append("client_id", clientId)
+                append("client_secret", clientSecret)
+            }
+        ).body()
 
-        println("clientId=[${clientId}] len=${clientId.length}")
-        println("clientSecret=[${clientSecret}] len=${clientSecret.length}")
+        cachedToken = response.accessToken
+        tokenExpiresAt = Clock.System.now() + (response.expiresIn - 30).seconds
+
+        return response.accessToken
+
+        /*if (cachedToken != null && Clock.System.now() < tokenExpiresAt) {
+            return cachedToken!!
+        }
+
         val httpResponse = httpClient.submitForm(
             url = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token",
             formParameters = Parameters.build {
@@ -58,14 +72,12 @@ class OpenSkyAuth(
         )
 
         val rawBody = httpResponse.bodyAsText()
-        println("OpenSky auth response [${httpResponse.status}]: $rawBody") // TEMP debug
-
         val response: TokenResponse = Json { ignoreUnknownKeys = true }.decodeFromString(rawBody)
 
         cachedToken = response.accessToken
         tokenExpiresAt = Clock.System.now() + (response.expiresIn - 30).seconds
 
-        return response.accessToken
+        return response.accessToken*/
     }
 }
 
