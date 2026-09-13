@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.airwatch.project.Aircraft.AircraftViewModel
 import org.airwatch.project.Aircraft.AircraftViewModelFactory
+import org.airwatch.project.AppLogger
 import org.airwatch.project.Filter.FilterViewModel
 import org.airwatch.project.WorldMap.AircraftDetails.AircraftDetailCard
 import org.airwatch.project.WorldMap.AircraftDetails.drawAircrafts
@@ -47,9 +48,11 @@ fun DrawMapCanvas(
     var selectedAircraftIcao by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
+        AppLogger.log("loading map...")
         coordinateTree = withContext(Dispatchers.IO) {
             loadMapToTree()
         }
+        AppLogger.log("map loaded")
     }
     val tree = coordinateTree ?: return
 

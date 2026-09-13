@@ -8,17 +8,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -93,19 +90,33 @@ fun BasicButton(onClick: () -> Unit, content: @Composable RowScope.() -> Unit)
 }
 
 @Composable
-fun ScrollableColumn(modifier: Modifier, content: @Composable ColumnScope.()-> Unit, count:Int)
-{
-    val scrollState = rememberScrollState()
-    LaunchedEffect(count)
-    {
-        scrollState.animateScrollTo(scrollState.maxValue)
-    }
-    Column(
-        modifier = modifier.verticalScroll(scrollState),
-        content = content
-    )
-}
+fun <T> AutoScrollLazyColumn(
+    items: List<T>,
+    modifier: Modifier = Modifier,
+    itemKey: ((T) -> Any)? = null,
+    itemContent: @Composable (T) -> Unit
+) {
+    val listState = rememberLazyListState()
 
+    // Auto-scroll to the last item whenever the list size increases
+    LaunchedEffect(items.size) {
+        if (items.isNotEmpty()) {
+            listState.animateScrollToItem(items.lastIndex)
+        }
+    }
+
+    LazyColumn(
+        state = listState,
+        modifier = modifier
+    ) {
+        items(
+            count = items.size,
+            key = if (itemKey != null) { index -> itemKey(items[index]) } else null
+        ) { index ->
+            itemContent(items[index])
+        }
+    }
+}
 @Composable
 fun SideBar(
     isVisible: Boolean,
@@ -203,5 +214,5 @@ fun TextBoxForDouble(onValueChange: (value:Double)-> Unit, label: @Composable ()
             },
         label = label
     )
-}// TODO{"there is some bug that force stops the app, probably illegal character of fats typing"}
+}
 

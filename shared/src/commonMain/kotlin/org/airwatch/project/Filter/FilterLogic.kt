@@ -11,6 +11,7 @@ import org.airwatch.project.Aircraft.AngleRange
 import org.airwatch.project.Aircraft.AreaRangeByCoordinate
 import org.airwatch.project.Aircraft.Coordinate
 import org.airwatch.project.Aircraft.VelocityRange
+import org.airwatch.project.AppLogger
 import org.airwatch.project.Filter.FilterViewModel.Queries.altitudeQuery
 import org.airwatch.project.Filter.FilterViewModel.Queries.angleQuery
 import org.airwatch.project.Filter.FilterViewModel.Queries.areaQuery
@@ -67,6 +68,7 @@ class FilterViewModel : ViewModel()
 
     fun clearFilter()
     {
+        AppLogger.log("cleared all filters")
         isFiltering = false
         clearQueries()
     }
@@ -74,7 +76,8 @@ class FilterViewModel : ViewModel()
     fun setFilteredAirCraft(newList: List<AirCraft>)
     {
         filteredAirCrafts.clear()
-        newList.forEach { filteredAirCrafts.add(it) }
+        filteredAirCrafts.addAll(newList)
+        AppLogger.log("found ${filteredAirCrafts.size} aircrafts")
     }
 
     fun filterAll(airCrafts : List<AirCraft>) {

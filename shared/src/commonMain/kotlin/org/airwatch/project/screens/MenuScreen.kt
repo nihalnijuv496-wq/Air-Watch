@@ -18,7 +18,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,9 +29,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import org.airwatch.project.Aircraft.AircraftViewModel
 import org.airwatch.project.Aircraft.AircraftViewModelFactory
 import org.airwatch.project.Filter.FilterSideBarContent
-import org.airwatch.project.Filter.FilterViewModel
+import org.airwatch.project.LogConsoleScreen
 import org.airwatch.project.UIComponents.ColumnDivider
-import org.airwatch.project.UIComponents.ScrollableColumn
 import org.airwatch.project.UIComponents.SideBar
 import org.airwatch.project.UIComponents.backGroundColor
 import org.airwatch.project.UIComponents.textColor
@@ -41,11 +39,10 @@ import org.airwatch.project.WorldMap.DrawMapCanvas
 
 @Composable
 fun MenuScreen(
-    aircraftViewModel: AircraftViewModel = viewModel(factory = AircraftViewModelFactory),
-    filerViewModel: FilterViewModel = viewModel ()) {
+    aircraftViewModel: AircraftViewModel = viewModel(factory = AircraftViewModelFactory)
+) {
 
 
-    val logMessages = remember { mutableStateListOf<String>() } //TODO{"add time interval in which aircrafts are fetched", "abstract the log screen to new file"}
     var isSideBarVisible by remember { mutableStateOf(false) }
     var mapState by remember { mutableStateOf("Plane") }
     var mapScreenSize by remember { mutableStateOf(Pair(0, 0)) }
@@ -100,8 +97,6 @@ fun MenuScreen(
                         onClick = {isSideBarVisible = true},
                         content = { Text (text = "filter")}
                     )
-
-
                     Button(
                         onClick = {
                                 mapState = if(mapState == "Plane") "Globe" else "Plane"
@@ -109,25 +104,6 @@ fun MenuScreen(
                         content = {Text( if(mapState == "Plane") "toGlobe" else "toPlane" )}
                     )
                 }
-                //val scope = rememberCoroutineScope()
-                Button(
-                    onClick = {println("nothing")}/*{scope.launch {
-                        aircraftViewModel.updateAircraftList(fetchFlights())
-                        logMessages.add("fetched ${aircraftViewModel.getShowableAircrafts(filerViewModel.isFiltering, filerViewModel.filteredAirCrafts).size} aircrafts")
-                        aircraftViewModel.getShowableAircrafts(filerViewModel.isFiltering, filerViewModel.filteredAirCrafts).forEach { println(it) }
-                    } }*/,
-                    content = { Text (text = "temp")}
-                )
-                Button(
-                    onClick = {aircraftViewModel.getShowableAircrafts(filerViewModel.isFiltering, filerViewModel.filteredAirCrafts).forEach {
-                        println("* $it")
-                    }},
-                    content = {Text("showVisible")})
-                Button(
-                    onClick = {aircraftViewModel.airCrafts.value.forEach {
-                        println("* $it")
-                    }},
-                    content = {Text("showFull")})
             }
 
             ColumnDivider()
@@ -141,29 +117,12 @@ fun MenuScreen(
                     }
             )
             {
-
-
                 DrawMapCanvas(type = mapState, screenHeight = mapScreenSize.first, screenWidth = mapScreenSize.second)
-
-
             }
 
             ColumnDivider()
 
-            ScrollableColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
-                content = {
-                    logMessages.forEach {
-                        Text(
-                            text = it,
-                            fontSize = 10.sp,
-                            color = textColor
-                        )
-                    }
-                },
-                count = logMessages.size
-            )
+            LogConsoleScreen()
         }
 
         SideBar(

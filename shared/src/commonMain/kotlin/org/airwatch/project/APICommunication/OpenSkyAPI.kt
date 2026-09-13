@@ -18,6 +18,7 @@ import kotlinx.serialization.Serializable
 import org.airwatch.project.Aircraft.AirCraft
 import org.airwatch.project.Aircraft.OpenSkyResponse
 import org.airwatch.project.Aircraft.toAirCraft
+import org.airwatch.project.AppLogger
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
@@ -90,9 +91,11 @@ class FlightTracker(
         while (currentCoroutineContext().isActive) {
             try {
                 val flights = fetchFlights()
+                AppLogger.log(message = "fetched ${flights.size} aircrafts")
                 emit(flights)
                 delay(nextPollDelayMillis())
             } catch (e: RateLimitExceededException) {
+                AppLogger.log(message = "reached rate limit, will try again after ${e.retryAfterSeconds} s")
                 delay(e.retryAfterSeconds * 1000)
             }
         }
