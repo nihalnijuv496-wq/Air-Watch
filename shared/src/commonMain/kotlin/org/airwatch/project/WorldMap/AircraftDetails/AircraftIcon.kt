@@ -1,4 +1,4 @@
-package org.airwatch.project.WorldMap.AircraftDrawer
+package org.airwatch.project.WorldMap.AircraftDetails
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color

@@ -65,7 +65,6 @@ data class Chunk(val chunkCorners: ChunkCorners, val depth: Int)
     {
         const val MAX_COORDINATES_PER_NODE = 15
         const val MAX_DEPTH = 10
-        private const val LOD_PIXEL_THRESHOLD = 5.0
     }
 
     fun subdivide() {
@@ -114,6 +113,7 @@ data class Chunk(val chunkCorners: ChunkCorners, val depth: Int)
         projection: Projection,
         screenWidth: Int,
         screenHeight: Int,
+        lodThreshold: Double = 5.0,
         onRender: (Chunk) -> Unit
     ) {
         if (!projection.isChunkVisible(
@@ -128,7 +128,7 @@ data class Chunk(val chunkCorners: ChunkCorners, val depth: Int)
         val screenSpan = projection.chunkScreenSpan(chunkCorners)
         val currentChildren = children
 
-        if (screenSpan < LOD_PIXEL_THRESHOLD || currentChildren == null) {
+        if (screenSpan < lodThreshold || currentChildren == null) {
             onRender(this)
             return
         }
@@ -138,6 +138,7 @@ data class Chunk(val chunkCorners: ChunkCorners, val depth: Int)
                 projection = projection,
                 screenWidth = screenWidth,
                 screenHeight = screenHeight,
+                lodThreshold = lodThreshold,
                 onRender = onRender
             )
         }

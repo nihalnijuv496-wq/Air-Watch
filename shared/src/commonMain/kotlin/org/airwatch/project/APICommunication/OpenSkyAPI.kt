@@ -57,27 +57,6 @@ class OpenSkyAuth(
         tokenExpiresAt = Clock.System.now() + (response.expiresIn - 30).seconds
 
         return response.accessToken
-
-        /*if (cachedToken != null && Clock.System.now() < tokenExpiresAt) {
-            return cachedToken!!
-        }
-
-        val httpResponse = httpClient.submitForm(
-            url = "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token",
-            formParameters = Parameters.build {
-                append("grant_type", "client_credentials")
-                append("client_id", clientId)
-                append("client_secret", clientSecret)
-            }
-        )
-
-        val rawBody = httpResponse.bodyAsText()
-        val response: TokenResponse = Json { ignoreUnknownKeys = true }.decodeFromString(rawBody)
-
-        cachedToken = response.accessToken
-        tokenExpiresAt = Clock.System.now() + (response.expiresIn - 30).seconds
-
-        return response.accessToken*/
     }
 }
 
