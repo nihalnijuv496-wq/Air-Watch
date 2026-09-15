@@ -5,9 +5,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import org.airwatch.project.UIComponents.AutoScrollLazyColumn
+import org.airwatch.project.UIComponents.RadarColors
 
 object AppLogger {
     val logs = mutableStateListOf<String>()
@@ -30,7 +30,7 @@ fun LogConsoleScreen(modifier: Modifier = Modifier) {
         Text(
             text = "- $message",
             fontSize = 10.sp,
-            color = Color.Black
+            color = RadarColors.TextPrimary
         )
     }
 }

@@ -19,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
@@ -33,6 +32,7 @@ import org.airwatch.project.Aircraft.AircraftViewModel
 import org.airwatch.project.Aircraft.AircraftViewModelFactory
 import org.airwatch.project.AppLogger
 import org.airwatch.project.Filter.FilterViewModel
+import org.airwatch.project.UIComponents.RadarColors
 import org.airwatch.project.WorldMap.AircraftDetails.AircraftDetailCard
 import org.airwatch.project.WorldMap.AircraftDetails.drawAircrafts
 
@@ -157,7 +157,7 @@ fun DrawMapCanvas(
             drawPoints(
                 points = visiblePoints,
                 pointMode = PointMode.Points,
-                color = Color.Black,
+                color = RadarColors.Amber,
                 strokeWidth = 0.5f
             )
             drawAircrafts(visibleAircrafts)

@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,16 +24,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.airwatch.project.Aircraft.AircraftViewModel
 import org.airwatch.project.Aircraft.AircraftViewModelFactory
 import org.airwatch.project.Filter.FilterSideBarContent
 import org.airwatch.project.LogConsoleScreen
+import org.airwatch.project.UIComponents.AirWatchTheme
+import org.airwatch.project.UIComponents.BasicButton
 import org.airwatch.project.UIComponents.ColumnDivider
+import org.airwatch.project.UIComponents.RadarColors
 import org.airwatch.project.UIComponents.SideBar
-import org.airwatch.project.UIComponents.backGroundColor
-import org.airwatch.project.UIComponents.textColor
 import org.airwatch.project.WorldMap.DrawMapCanvas
 
 
@@ -41,98 +41,78 @@ import org.airwatch.project.WorldMap.DrawMapCanvas
 fun MenuScreen(
     aircraftViewModel: AircraftViewModel = viewModel(factory = AircraftViewModelFactory)
 ) {
+    AirWatchTheme {
+        var isSideBarVisible by remember { mutableStateOf(false) }
+        var mapState by remember { mutableStateOf("Plane") }
+        var mapScreenSize by remember { mutableStateOf(Pair(0, 0)) }
 
-
-    var isSideBarVisible by remember { mutableStateOf(false) }
-    var mapState by remember { mutableStateOf("Plane") }
-    var mapScreenSize by remember { mutableStateOf(Pair(0, 0)) }
-
-
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .windowInsetsPadding(WindowInsets.statusBars)
-        .windowInsetsPadding(WindowInsets.navigationBars)
-    )
-    {
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = backGroundColor)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                ){isSideBarVisible = false},
-
-            )
-        {
+                .windowInsetsPadding(WindowInsets.statusBars)
+                .windowInsetsPadding(WindowInsets.navigationBars)
+        ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(fraction = 0.17f),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            )
-            {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(fraction = 0.5f),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                    .fillMaxSize()
+                    .background(RadarColors.Background)
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) { isSideBarVisible = false },
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight(fraction = 0.17f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = "Name",
-                        fontSize = 25.sp,
-                        color = textColor
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(fraction = 0.5f),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Button(
-                        onClick = {isSideBarVisible = true},
-                        content = { Text (text = "filter")}
-                    )
-                    Button(
-                        onClick = {
-                                mapState = if(mapState == "Plane") "Globe" else "Plane"
-                            },
-                        content = {Text( if(mapState == "Plane") "toGlobe" else "toPlane" )}
-                    )
-                }
-            }
-
-            ColumnDivider()
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(fraction = 0.65f)
-                    .onGloballyPositioned{ coordinates ->
-                        mapScreenSize = Pair(coordinates.size.height, coordinates.size.width)
+                    Row(
+                        modifier = Modifier.fillMaxWidth().fillMaxHeight(fraction = 0.5f),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "AirWatch", style = MaterialTheme.typography.headlineMedium)
                     }
-            )
-            {
-                DrawMapCanvas(type = mapState, screenHeight = mapScreenSize.first, screenWidth = mapScreenSize.second)
+                    Row(
+                        modifier = Modifier.fillMaxWidth().fillMaxHeight(fraction = 0.5f),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        BasicButton(onClick = { isSideBarVisible = true }) {
+                            Text("filter", style = MaterialTheme.typography.labelLarge)
+                        }
+                        BasicButton(onClick = { mapState = if (mapState == "Plane") "Globe" else "Plane" }) {
+                            Text(
+                                if (mapState == "Plane") "to globe" else "to plane",
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+                    }
+                }
+
+                ColumnDivider()
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(fraction = 0.65f)
+                        .onGloballyPositioned { coordinates ->
+                            mapScreenSize = Pair(coordinates.size.height, coordinates.size.width)
+                        }
+                ) {
+                    DrawMapCanvas(type = mapState, screenHeight = mapScreenSize.first, screenWidth = mapScreenSize.second)
+                }
+
+                ColumnDivider()
+
+                LogConsoleScreen()
             }
 
-            ColumnDivider()
-
-            LogConsoleScreen()
+            SideBar(
+                isVisible = isSideBarVisible,
+                modifier = Modifier.fillMaxHeight().fillMaxWidth(0.85f).align(Alignment.CenterStart),
+                contentFun = { FilterSideBarContent(data = aircraftViewModel.airCrafts.value) }
+            )
         }
-
-        SideBar(
-            isVisible = isSideBarVisible,
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(0.85f)
-                .align(Alignment.CenterStart),
-            contentFun = { FilterSideBarContent(data = aircraftViewModel.airCrafts.value) }
-        )
     }
-
 }
