@@ -2,8 +2,11 @@
 
 A live aircraft tracker built with **Kotlin Multiplatform** and **Compose Multiplatform**. AirWatch pulls real-time flight data from the [OpenSky Network](https://opensky-network.org/) and draws it on a custom-rendered world map, switchable between a flat map and a 3D globe. The UI is shared between Android and iOS.
 
-![AirWatch](docs/demo_PLANE_SS.jpeg)
-![AirWatch](docs/demo_GLOBE_SS.jpeg)
+<p align="center">
+  <img src="docs/demo_PLANE_SS.jpeg" alt="AirWatch" width="35%" />
+  &nbsp;&nbsp;
+  <img src="docs/demo_GLOBE_SS.jpeg" alt="AirWatch" width="35%" />
+</p>
 
 ## Features
 
